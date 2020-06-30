@@ -23,15 +23,6 @@ ActiveRecord::Schema.define(version: 2020_06_30_053846) do
     t.index ["level"], name: "index_required_exps_on_level", unique: true
   end
 
-  create_table "time_reports", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.time "study_time", null: false
-    t.text "memo"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_time_reports_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
