@@ -1,10 +1,11 @@
-class V1::TimeReportController < ApplicationController
+class V1::TimeReportsController < ApplicationController
 
   def index
   end
 
   def create
-    time_report = TimeReport.new(time_report_params)
+    current_user = User.find(params[:user_id])
+    time_report = current_user.time_reports.build(time_report_params)
     if time_report.save
       render json: time_report, status: :created
     else
@@ -13,6 +14,6 @@ class V1::TimeReportController < ApplicationController
   end
 
   private def time_report_params
-    params.require(:time_report).permit(:user_id, :memo, :study_time)
+    params.require(:time_report).permit(:memo, :study_time)
   end
 end
