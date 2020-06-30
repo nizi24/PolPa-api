@@ -22,6 +22,14 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'factory_bot_rails'
+  gem 'webdrivers'
+  gem 'launchy'
+  gem 'shoulda-matchers',
+  git: 'https://github.com/thoughtbot/shoulda-matchers.git'
 end
 
 group :development do
