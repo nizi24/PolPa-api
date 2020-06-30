@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_053846) do
+ActiveRecord::Schema.define(version: 2020_06_30_023523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,5 +34,4 @@ ActiveRecord::Schema.define(version: 2020_06_30_053846) do
     t.index ["screen_name"], name: "index_users_on_screen_name", unique: true
   end
 
-  add_foreign_key "time_reports", "users"
 end
