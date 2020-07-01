@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_023523) do
+ActiveRecord::Schema.define(version: 2020_07_01_112937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "experience_records", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "time_reports_id"
+    t.integer "experience_point", null: false
+    t.float "bonus_multiplier", default: 1.0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["time_reports_id"], name: "index_experience_records_on_time_reports_id"
+    t.index ["user_id"], name: "index_experience_records_on_user_id"
+  end
 
   create_table "required_exps", force: :cascade do |t|
     t.integer "level", null: false
@@ -21,6 +32,15 @@ ActiveRecord::Schema.define(version: 2020_06_30_023523) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["level"], name: "index_required_exps_on_level", unique: true
+  end
+
+  create_table "time_reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.time "study_time", null: false
+    t.text "memo"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_time_reports_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -34,4 +54,7 @@ ActiveRecord::Schema.define(version: 2020_06_30_023523) do
     t.index ["screen_name"], name: "index_users_on_screen_name", unique: true
   end
 
+  add_foreign_key "experience_records", "time_reports", column: "time_reports_id"
+  add_foreign_key "experience_records", "users"
+  add_foreign_key "time_reports", "users"
 end
