@@ -1,4 +1,4 @@
 class ExperienceRecord < ApplicationRecord
-  belongs_to user
-  belongs_to time_report
+  belongs_to :user
+  belongs_to :time_report
 end
