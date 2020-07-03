@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "TimeReports", type: :request do
 
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
+  let!(:experience) { create(:experience, user: user) }
 
   describe '#create' do
     it 'タイムレポートが正しく保存されること' do

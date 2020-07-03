@@ -15,30 +15,47 @@ class ExperienceRecorder
     )
 
     if experience_record.save!
-      @user.experience.total_experience += gain_exp
-      check_level(gain_exp)
+      @user.experience.total += gain_exp
+      check_level
       @user.experience.save!
       experience_record
     end
   end
 
-  private def check_level(gain_exp)
-    to_next = @user.experience.experience_to_next
-    to_next -= gain_exp
-    if to_next <= 0
-      next_level = RequiredExp.find_by(level: @user.experience.level + 1)
-      sub_next = next_level.required_exp - (- to_next)
-      level_up(sub_next)
+  private def check_level
+    required = RequiredExp.find_by(level: @user.experience.level)
+    sub_total = required.total_experience - @user.experience.total
+    if sub_total <= 0
+      @user.experience.level += 1
+      check_level
+    else
+      @user.experience.to_next = sub_total
     end
   end
 
-  private def level_up(sub_next)
-    if sub_next > 0
-      @user.experience.level += 1
-      @user.experience.experience_to_next = sub_next
-    else
-      @user.experience.level += 1
-      level_up(- sub_next)
-    end
-  end
+
+  #コードが冗長でわかりにくいので、必要総経験値から減算する方法にすると単純になるかも
+  # private def check_level(gain_exp)
+  #   to_next = @user.experience.to_next
+  #   to_next -= gain_exp
+  #   if to_next <= 0
+  #     # next_level = RequiredExp.find_by(level: @user.experience.level + 1)
+  #     # sub_next = next_level.required_exp - (- to_next)
+  #     level_up(sub_next)
+  #   else
+  #     @user.experience.to_next = to_next
+  #   end
+  # end
+  #
+  # private def level_up(sub_next)
+  #   next_level = RequiredExp.find_by(level: @user.experience.level + 1)
+  #   if sub_next > 0
+  #     @user.experience.level += 1
+  #     @user.experience.to_next = next_level.required_exp - sub_next
+  #   else
+  #     @user.experience.level += 1
+  #     sub_next += next_level.required_exp
+  #     level_up(sub_next)
+  #   end
+  # end
 end

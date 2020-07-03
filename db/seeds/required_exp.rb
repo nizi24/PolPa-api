@@ -17,5 +17,5 @@ pre = 0
   puts "#{i}レベル 次のレベルに必要な経験値: #{exp} 累計: #{sum}"
   pre = exp
 
-  RequiredExp.create!(level: i, required_exp: exp)
+  RequiredExp.create!(level: i, required_exp: exp, total_experience: sum)
 end

@@ -13,10 +13,12 @@ class V1::UsersController < ApplicationController
   def show
     @user = User.join_exp.find(params[:id])
     @time_reports = @user.time_reports.join_exp.newest
+    @required_exp = RequiredExp.find_by(level: @user.level + 1)
     if @user
       render json: {
         user: @user,
-        time_reports: @time_reports
+        time_reports: @time_reports,
+        required_exp: @required_exp
       }
     end
   end

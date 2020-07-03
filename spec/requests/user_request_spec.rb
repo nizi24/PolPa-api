@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
 
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
+  let!(:experience) { create(:experience, user: user) }
 
   describe '#show' do
     it '正しいユーザー情報が取得できること' do
