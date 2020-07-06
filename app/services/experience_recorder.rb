@@ -29,6 +29,7 @@ class ExperienceRecorder
     @user.experience.total -= exp
     check_level_down
     check_level
+    @user.experience.save!
     experience_record.destroy!
   end
 

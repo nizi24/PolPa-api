@@ -111,6 +111,23 @@ describe ExperienceRecorder do
         expect(user.experience.total).to eq 0
         expect(user.experience.to_next).to eq 50
       end
+
+      it '連続して削除できること' do
+        time_report1 = create(:time_report, study_time: '2000-01-01 2:00:00')
+        time_report2 = create(:time_report, study_time: '2000-01-01 2:00:00')
+        time_report3 = create(:time_report, study_time: '2000-01-01 1:00:00')
+        time_report4 = create(:time_report, study_time: '2000-01-01 0:01:00')
+        ExperienceRecorder.new(user).record(time_report1)
+        ExperienceRecorder.new(user).record(time_report2)
+        ExperienceRecorder.new(user).record(time_report3)
+        ExperienceRecorder.new(user).record(time_report4)
+        ExperienceRecorder.new(user).delete_record(time_report1)
+        ExperienceRecorder.new(user).delete_record(time_report2)
+        ExperienceRecorder.new(user).delete_record(time_report3)
+        expect(user.experience.level).to eq 1
+        expect(user.experience.total).to eq 1
+        expect(user.experience.to_next).to eq 49
+      end
     end
   end
 end

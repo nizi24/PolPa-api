@@ -42,6 +42,7 @@ RSpec.describe 'TimeReports', type: :request do
   describe '#destroy' do
     it 'タイムレポートが正しく破棄されること' do
       time_report = create(:time_report, user: user)
+      experience_record = create(:experience_record, time_report: time_report)
       expect {
         delete v1_time_report_path(time_report),
           params: {

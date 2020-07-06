@@ -54,10 +54,17 @@ class V1::TimeReportsController < ApplicationController
   def destroy
     user = User.find(params[:user_id])
     time_report = TimeReport.find(params[:id])
+
     ActiveRecord::Base.transaction do
-      ExperienceRecorder.new(user).record(time_report)
+
+      ExperienceRecorder.new(user).delete_record(time_report)
       time_report.destroy!
-      head :no_content
+      experience = user.experience
+      required_exp = RequiredExp.find_by(level: experience.level)
+      render json: {
+        experience: experience,
+        required_exp: required_exp
+      }
     end
   end
 
