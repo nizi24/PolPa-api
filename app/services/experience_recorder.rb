@@ -1,4 +1,5 @@
 class ExperienceRecorder
+  delegate :experience, to: :@user
 
   def initialize(user)
     @user = user
@@ -15,10 +16,10 @@ class ExperienceRecorder
     end
 
     if experience_record.save!
-      @user.experience.total += gain_exp
+      experience.total += gain_exp
       check_level_down if down_check
       check_level
-      @user.experience.save!
+      experience.save!
       experience_record
     end
   end
@@ -26,10 +27,10 @@ class ExperienceRecorder
   def delete_record(time_report)
     experience_record = time_report.experience_record
     exp = experience_record.experience_point
-    @user.experience.total -= exp
+    experience.total -= exp
     check_level_down
     check_level
-    @user.experience.save!
+    experience.save!
     experience_record.destroy!
   end
 
@@ -49,29 +50,29 @@ class ExperienceRecorder
 
   private def update_record(experience_record, gain_exp)
     old_exp = experience_record.experience_point
-    @user.experience.total -= old_exp
-    @user.experience.to_next -= old_exp
+    experience.total -= old_exp
+    experience.to_next -= old_exp
     experience_record.experience_point = gain_exp
     experience_record
   end
 
   private def check_level
-    required = RequiredExp.find_by(level: @user.experience.level)
-    sub_total = required.total_experience - @user.experience.total
+    required = RequiredExp.find_by(level: experience.level)
+    sub_total = required.total_experience - experience.total
     if sub_total <= 0
-      @user.experience.level += 1
+      experience.level += 1
       check_level
     else
-      @user.experience.to_next = sub_total
+      experience.to_next = sub_total
     end
   end
 
   private def check_level_down
-    required = RequiredExp.find_by(level: @user.experience.level - 1)
+    required = RequiredExp.find_by(level: experience.level - 1)
     if required
-      sub_total = required.total_experience - @user.experience.total
+      sub_total = required.total_experience - experience.total
       if sub_total >= 0
-        @user.experience.level -= 1
+        experience.level -= 1
         check_level_down
       end
     end
