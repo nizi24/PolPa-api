@@ -7,4 +7,5 @@ class TimeReport < ApplicationRecord
   scope :newest, -> { order(created_at: :desc) }
 
   validates :study_time, presence: true
+  validates :memo, length: { maximum: 280 }
 end
