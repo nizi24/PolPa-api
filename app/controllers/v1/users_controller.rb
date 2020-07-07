@@ -2,7 +2,7 @@ class V1::UsersController < ApplicationController
 
   def index
     if params[:uid]
-      @user = User.find_by(uid: params[:uid])
+      @user = User.join_exp.find_by(uid: params[:uid])
       render json: @user
     else
       @users = User.all
@@ -11,15 +11,22 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.join_exp.find(params[:id])
+    @time_reports = @user.time_reports.join_exp.newest
+    @required_exp = RequiredExp.find_by(level: @user.level)
     if @user
-      render json: @user
+      render json: {
+        user: @user,
+        time_reports: @time_reports,
+        required_exp: @required_exp
+      }
     end
   end
 
   def create
     user = User.new(user_params)
-    if user.save
+    if user.save && user.create_experience!
+      user = User.join_exp.find(user.id)
       render json: user, status: :created
     else
       render json: user.errors, status: :unprocessable_entity
