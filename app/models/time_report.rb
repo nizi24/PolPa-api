@@ -1,0 +1,2 @@
+class TimeReport < ApplicationRecord
+end
