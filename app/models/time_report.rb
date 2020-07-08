@@ -6,6 +6,9 @@ class TimeReport < ApplicationRecord
 
   scope :join_exp, -> { joins(:experience_record)
     .select('time_reports.*, experience_records.*') }
+  scope :join_tags, -> { left_joins(:tags)
+    .group('time_reports.id, experience_records.id')
+    .select('time_reports.*, experience_records.*, ARRAY_AGG(tags.name) AS tags') }
   scope :newest, -> { order(created_at: :desc) }
 
   validates :study_time, presence: true
@@ -13,5 +16,9 @@ class TimeReport < ApplicationRecord
 
   def links
     time_report_tag_links
+  end
+
+  def join_tags
+    tags
   end
 end
