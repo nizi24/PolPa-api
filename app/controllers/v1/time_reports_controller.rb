@@ -13,6 +13,7 @@ class V1::TimeReportsController < ApplicationController
 
         experience_record = ExperienceRecorder.new(user)
           .record(time_report)
+        tags = TagRecorder.new(time_report).create_links(params[:tags])
         experience = Experience.find_by(user_id: user.id)
         required_exp = RequiredExp.find_by(level: experience.level)
 
