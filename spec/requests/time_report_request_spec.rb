@@ -64,5 +64,16 @@ RSpec.describe 'TimeReports', type: :request do
           }
       }.to change(user.time_reports, :count).by(-1)
     end
+
+    it '紐付いたタグも削除されること' do
+      time_report = create(:time_report, :tags, user: user)
+      experience_record = create(:experience_record, time_report: time_report)
+      expect {
+        delete v1_time_report_path(time_report),
+          params: {
+            user_id: user.id
+          }
+      }.to change(TimeReportTagLink, :count).by(-3)
+    end
   end
 end

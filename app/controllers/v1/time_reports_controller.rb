@@ -8,9 +8,7 @@ class V1::TimeReportsController < ApplicationController
     time_report = user.time_reports.build(time_report_params)
 
     ActiveRecord::Base.transaction do
-
       if time_report.save!
-
         experience_record = ExperienceRecorder.new(user)
           .record(time_report)
         tags = TagRecorder.new(time_report).create_links(params[:tags])
@@ -21,7 +19,8 @@ class V1::TimeReportsController < ApplicationController
           time_report: time_report,
           experience_record: experience_record,
           experience: experience,
-          required_exp: required_exp
+          required_exp: required_exp,
+          tags: tags
         }, status: :created
 
       else
@@ -39,6 +38,7 @@ class V1::TimeReportsController < ApplicationController
       if time_report.save!
         experience_record = ExperienceRecorder.new(user)
           .record(time_report)
+        tags = TagRecorder.new(time_report).create_links(params[:tags])
         experience = Experience.find_by(user_id: user.id)
         required_exp = RequiredExp.find_by(level: experience.level)
 
@@ -46,7 +46,8 @@ class V1::TimeReportsController < ApplicationController
             time_report: time_report,
             experience_record: experience_record,
             experience: experience,
-            required_exp: required_exp
+            required_exp: required_exp,
+            tags: tags
           }
       end
     end

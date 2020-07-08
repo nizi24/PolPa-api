@@ -17,8 +17,4 @@ class TimeReport < ApplicationRecord
   def links
     time_report_tag_links
   end
-
-  def join_tags
-    tags
-  end
 end
