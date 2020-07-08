@@ -19,6 +19,20 @@ RSpec.describe 'TimeReports', type: :request do
       expect(experience_record.experience_point).to eq 90
       expect(response.status).to eq 201
     end
+
+    it 'タグを付与できること' do
+      time_report_params = attributes_for(:time_report, study_time: '1:30')
+      tags = { 'tags' => [{ 'text' => 'foo'}, { 'text' => 'bar' }]}
+      expect {
+        post v1_time_reports_path,
+          params: {
+            user_id: user.id,
+            time_report: time_report_params,
+            tags: tags
+          }
+      }.to change(Tag, :count).by(2)
+      expect(TimeReportTagLink.count).to eq 2
+    end
   end
 
   describe '#update' do
@@ -49,6 +63,17 @@ RSpec.describe 'TimeReports', type: :request do
             user_id: user.id
           }
       }.to change(user.time_reports, :count).by(-1)
+    end
+
+    it '紐付いたタグも削除されること' do
+      time_report = create(:time_report, :tags, user: user)
+      experience_record = create(:experience_record, time_report: time_report)
+      expect {
+        delete v1_time_report_path(time_report),
+          params: {
+            user_id: user.id
+          }
+      }.to change(TimeReportTagLink, :count).by(-3)
     end
   end
 end

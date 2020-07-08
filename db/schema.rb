@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_03_082114) do
+ActiveRecord::Schema.define(version: 2020_07_07_124120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,23 @@ ActiveRecord::Schema.define(version: 2020_07_03_082114) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_experience", null: false
     t.index ["level"], name: "index_required_exps_on_level", unique: true
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "time_report_tag_links", force: :cascade do |t|
+    t.bigint "time_report_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id"], name: "index_time_report_tag_links_on_tag_id"
+    t.index ["time_report_id", "tag_id"], name: "index_time_report_tag_links_on_time_report_id_and_tag_id", unique: true
+    t.index ["time_report_id"], name: "index_time_report_tag_links_on_time_report_id"
   end
 
   create_table "time_reports", force: :cascade do |t|
