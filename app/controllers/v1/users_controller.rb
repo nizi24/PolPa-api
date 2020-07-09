@@ -3,7 +3,10 @@ class V1::UsersController < ApplicationController
   def index
     if params[:uid]
       @user = User.join_exp.find_by(uid: params[:uid])
-      render json: @user
+      likes = @user.likes
+      render json: { user: @user,
+        likes: likes.to_json(only: [:likeable_type, :likeable_id])
+      }
     else
       @users = User.all
       render json: @users
@@ -16,7 +19,8 @@ class V1::UsersController < ApplicationController
     if @user
       render json: { user: @user.to_json(include: { time_reports: { include:
         [:experience_record, :tags,
-        comments: { include: { user: { except: [:uid, :email]}}}]}},
+        comments: { include: { user: { except: [:uid, :email]}}}],
+        methods: :likes_count }},
         except:  [:uid, :email]),
         required_exp: required_exp }
     end

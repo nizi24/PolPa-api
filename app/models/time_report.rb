@@ -1,4 +1,6 @@
 class TimeReport < ApplicationRecord
+  include Likeable
+
   belongs_to :user
   has_one :experience_record, dependent: :destroy
   has_many :time_report_tag_links, dependent: :destroy
