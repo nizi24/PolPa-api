@@ -5,6 +5,18 @@ RSpec.describe 'TimeReports', type: :request do
   let!(:user) { create(:user) }
   let!(:experience) { create(:experience, user: user) }
 
+  describe '#show' do
+    it 'タイムレポートと付属する情報が取得できること' do
+      time_report = create(:time_report, :tags)
+      create(:experience_record, time_report: time_report)
+      get v1_time_report_path(time_report)
+      json = JSON.parse(response.body)
+      expect(response.status).to eq 200
+      expect(json['time_report']['study_time']).to eq '2000-01-01T00:30:00.000Z'
+      expect(json['time_report']['experience_point']).to eq 30
+    end
+  end
+
   describe '#create' do
     it 'タイムレポートが正しく保存されること' do
       time_report_params = attributes_for(:time_report, study_time: '1:30')

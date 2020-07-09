@@ -9,6 +9,7 @@ gem 'puma', '~> 4.1'
 gem 'active_model_serializers'
 gem 'rack-cors'
 gem 'date_validator'
+gem 'bullet'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 

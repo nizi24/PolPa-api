@@ -12,14 +12,22 @@ class V1::UsersController < ApplicationController
 
   def show
     @user = User.join_exp.find(params[:id])
-    @time_reports = @user.time_reports.join_exp.join_tags.newest
-    @required_exp = RequiredExp.find_by(level: @user.level)
+    # @time_reports = @user.time_reports
+    #   .includes(:experience_record, :tags, { comments: :user })
+    #   .left_joins(:experience_record, :tags, { comments: :user })
+    #   .select_all
+    #   .newest
+
+    required_exp = RequiredExp.find_by(level: @user.level)
     if @user
-      render json: {
-        user: @user,
-        time_reports: @time_reports,
-        required_exp: @required_exp
-      }
+      # render json: {
+      #   user: @user,
+      #   time_reports: @time_reports,
+      #   required_exp: @required_exp
+      # }
+      render json: { user: @user.to_json(include: { time_reports: { include:
+        [:experience_record, :tags, comments: { include: :user }]}}),
+        required_exp: required_exp }
     end
   end
 

@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :time_reports, dependent: :destroy
+  has_many :time_reports, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :experience_records, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_one :experience, dependent: :destroy
