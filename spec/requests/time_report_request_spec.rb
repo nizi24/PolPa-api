@@ -88,5 +88,16 @@ RSpec.describe 'TimeReports', type: :request do
           }
       }.to change(TimeReportTagLink, :count).by(-3)
     end
+
+    it 'コメントも削除されること' do
+      time_report = create(:time_report, :comments, user: user)
+      experience_record = create(:experience_record, time_report: time_report)
+      expect {
+        delete v1_time_report_path(time_report),
+          params: {
+            user_id: user.id
+          }
+      }.to change(Comment, :count).by(-3)
+    end
   end
 end

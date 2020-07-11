@@ -15,4 +15,13 @@ RSpec.describe "Comments", type: :request do
       }.to change(time_report.comments, :count).by(1)
     end
   end
+
+  describe '#destroy' do
+    it 'コメントを削除できること' do
+      comment = create(:comment, user: user)
+      expect {
+        delete v1_comment_path(comment)
+      }.to change(user.comments, :count).by(-1)
+    end
+  end
 end
