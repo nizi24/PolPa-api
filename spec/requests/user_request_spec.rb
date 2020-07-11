@@ -9,8 +9,9 @@ RSpec.describe "Users", type: :request do
     it '正しいユーザー情報が取得できること' do
       get v1_user_path(user)
       json = JSON.parse(response.body)
+      user = JSON.parse(json['user'])
       expect(response.status).to eq 200
-      expect(json['user']['id']).to eq user.id
+      expect(user['id']).to eq user['id']
     end
 
     it 'タイムレポートとその経験値が取得できること' do
@@ -24,9 +25,10 @@ RSpec.describe "Users", type: :request do
 
       get v1_user_path(user)
       json = JSON.parse(response.body)
+      user = JSON.parse(json['user'])
       expect(response.status).to eq 200
-      expect(json['time_reports'][0]['memo']).to eq 'foo'
-      expect(json['time_reports'][0]['experience_point']).to eq 20
+      expect(user['time_reports'][0]['memo']).to eq 'foo'
+      expect(user['time_reports'][0]['experience_record']['experience_point']).to eq 20
     end
   end
 

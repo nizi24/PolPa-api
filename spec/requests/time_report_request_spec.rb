@@ -11,9 +11,10 @@ RSpec.describe 'TimeReports', type: :request do
       create(:experience_record, time_report: time_report)
       get v1_time_report_path(time_report)
       json = JSON.parse(response.body)
+      time_report = JSON.parse(json['time_report'])
       expect(response.status).to eq 200
-      expect(json['time_report']['study_time']).to eq '2000-01-01T00:30:00.000Z'
-      expect(json['time_report']['experience_point']).to eq 30
+      expect(time_report['study_time']).to eq '2000-01-01T00:30:00.000Z'
+      expect(time_report['experience_record']['experience_point']).to eq 30
     end
   end
 

@@ -4,10 +4,11 @@ class V1::TimeReportsController < ApplicationController
   end
 
   def show
-    time_report = TimeReport.join_exp.join_tags.find(params[:id])
+    time_report = TimeReport.find(params[:id])
     user = time_report.user
-    render json: { time_report: time_report.to_json(include: [:experience_record, :tags, comments: { include: :user }]),
-      user: user }
+    render json: { time_report: time_report.to_json(include: [:experience_record, :tags,
+    comments: { include: { user: { except: [:uid, :email]}}}]),
+      user: user.to_json(except: [:uid, :email]) }
   end
 
   def create

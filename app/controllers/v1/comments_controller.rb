@@ -3,7 +3,7 @@ class V1::CommentsController < ApplicationController
   def create
     comment = Comment.new(comment_params)
     if comment.save
-      render json: comment.to_json(include: :user)
+      render json: comment.to_json(include: { user: { except: [:uid, :email]}})
     end
   end
 
