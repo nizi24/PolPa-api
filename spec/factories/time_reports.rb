@@ -9,5 +9,9 @@ FactoryBot.define do
         create_list(:tag, 3, time_reports: [time_report])
       end
     end
+
+    trait :comments do
+      after(:create) { |t| create_list(:comment, 3, time_report: t) }
+    end
   end
 end

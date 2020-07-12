@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to validate_length_of(:email) }
   it { is_expected.to have_many(:time_reports) }
   it { is_expected.to have_many(:experience_records) }
+  it { is_expected.to have_many(:comments) }
   it { is_expected.to have_one(:experience) }
 
   it '無効なユーザー名では登録に成功しないこと' do

@@ -11,4 +11,5 @@ RSpec.describe TimeReport, type: :model do
   it { is_expected.to have_one(:experience_record) }
   it { is_expected.to have_many(:time_report_tag_links) }
   it { is_expected.to have_many(:tags) }
+  it { is_expected.to have_many(:comments) }
 end
