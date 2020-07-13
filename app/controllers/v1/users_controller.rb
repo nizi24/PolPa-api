@@ -19,7 +19,8 @@ class V1::UsersController < ApplicationController
     if @user
       render json: { user: @user.to_json(include: { time_reports: { include:
         [:experience_record, :tags,
-        comments: { include: { user: { except: [:uid, :email]}}}],
+        comments: { include: { user: { except: [:uid, :email]}},
+        methods: :likes_count }],
         methods: :likes_count }},
         except:  [:uid, :email]),
         required_exp: required_exp }

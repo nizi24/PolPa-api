@@ -7,7 +7,8 @@ class V1::TimeReportsController < ApplicationController
     time_report = TimeReport.find(params[:id])
     user = time_report.user
     render json: { time_report: time_report.to_json(include: [:experience_record, :tags,
-    comments: { include: { user: { except: [:uid, :email]}}}],
+    comments: { include: { user: { except: [:uid, :email]}},
+    methods: :likes_count }],
     methods: :likes_count ),
       user: user.to_json(except: [:uid, :email]) }
   end
@@ -25,7 +26,7 @@ class V1::TimeReportsController < ApplicationController
         required_exp = RequiredExp.find_by(level: experience.level)
 
         render json: {
-          time_report: time_report,
+          time_report: time_report.to_json(include: :comments),
           experience_record: experience_record,
           experience: experience,
           required_exp: required_exp,
