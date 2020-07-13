@@ -64,7 +64,8 @@ class V1::TimeReportsController < ApplicationController
 
   def destroy
     user = User.find(params[:user_id])
-    time_report = TimeReport.find(params[:id])
+    time_report = TimeReport.includes(:likes, { comments: :likes })
+      .find(params[:id])
 
     ActiveRecord::Base.transaction do
 
