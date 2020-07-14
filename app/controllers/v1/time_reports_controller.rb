@@ -26,11 +26,11 @@ class V1::TimeReportsController < ApplicationController
         required_exp = RequiredExp.find_by(level: experience.level)
 
         render json: {
-          time_report: time_report.to_json(include: :comments),
-          experience_record: experience_record,
+          time_report: time_report.to_json(include: [:experience_record, :tags,
+          comments: { methods: :likes_count }],
+          methods: :likes_count ),
           experience: experience,
-          required_exp: required_exp,
-          tags: tags
+          required_exp: required_exp
         }, status: :created
 
       else
@@ -53,11 +53,12 @@ class V1::TimeReportsController < ApplicationController
         required_exp = RequiredExp.find_by(level: experience.level)
 
           render json: {
-            time_report: time_report,
-            experience_record: experience_record,
+            time_report: time_report.to_json(include: [:experience_record, :tags,
+            comments: { include: { user: { except: [:uid, :email]}},
+            methods: :likes_count }],
+            methods: :likes_count ),
             experience: experience,
-            required_exp: required_exp,
-            tags: tags
+            required_exp: required_exp
           }
       end
     end
