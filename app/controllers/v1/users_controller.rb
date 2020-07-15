@@ -7,14 +7,12 @@ class V1::UsersController < ApplicationController
       render json: { user: @user,
         likes: likes.to_json(only: [:likeable_type, :likeable_id])
       }
-    else
-      @users = User.all
-      render json: @users
     end
   end
 
   def show
     @user = User.join_exp.find(params[:id])
+    main_tags = User.main_tags(params[:id])
     required_exp = RequiredExp.find_by(level: @user.level)
     if @user
       render json: { user: @user.to_json(include: { time_reports: { include:
@@ -23,7 +21,8 @@ class V1::UsersController < ApplicationController
         methods: :likes_count }],
         methods: :likes_count }},
         except:  [:uid, :email]),
-        required_exp: required_exp }
+        required_exp: required_exp,
+        main_tags: main_tags}
     end
   end
 

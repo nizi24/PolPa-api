@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Comments", type: :request do
+RSpec.describe "V1::Comments", type: :request do
   let(:user) { create(:user) }
   let(:time_report) { create(:time_report) }
 

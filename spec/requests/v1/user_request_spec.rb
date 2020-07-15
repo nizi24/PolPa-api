@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Users", type: :request do
+RSpec.describe "V1::Users", type: :request do
 
   let!(:user) { create(:user) }
   let!(:experience) { create(:experience, user: user) }
