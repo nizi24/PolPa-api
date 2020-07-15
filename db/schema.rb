@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_095357) do
     t.text "memo"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.date "study_date", null: false
+    t.datetime "study_date", null: false
     t.index ["user_id", "study_date"], name: "index_time_reports_on_user_id_and_study_date"
     t.index ["user_id"], name: "index_time_reports_on_user_id"
   end

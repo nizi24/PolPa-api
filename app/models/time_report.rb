@@ -11,6 +11,7 @@ class TimeReport < ApplicationRecord
 
   validates :study_time, presence: true
   validates :memo, length: { maximum: 280 }
+  validates :study_date, presence: true
 
   def links
     time_report_tag_links

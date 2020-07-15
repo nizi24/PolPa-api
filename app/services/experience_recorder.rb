@@ -37,6 +37,7 @@ class ExperienceRecorder
   private def cal_exp(time_report)
     hours = time_report.study_time.hour
     minutes = time_report.study_time.min
+    # bonus_magnification = CalculationOfContinuousDays.new
     gain_exp = hours * 60 + minutes
   end
 

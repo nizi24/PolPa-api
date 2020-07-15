@@ -1,7 +1,9 @@
 class Experience < ApplicationRecord
   alias_attribute :total, :total_experience
   alias_attribute :to_next, :experience_to_next
-
+  alias_attribute :current_continue, :current_continuation_days
+  alias_attribute :max_continue, :max_continuation_days
+  
   belongs_to :user
 
   validates :level, presence: true, numericality: { only_integer: true }
