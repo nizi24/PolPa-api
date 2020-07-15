@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_004836) do
+ActiveRecord::Schema.define(version: 2020_07_15_093523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,18 @@ ActiveRecord::Schema.define(version: 2020_07_09_004836) do
     t.index ["screen_name"], name: "index_users_on_screen_name", unique: true
   end
 
+  create_table "weekly_targets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.time "target_time", null: false
+    t.datetime "start_date", default: "2020-07-12 20:00:00"
+    t.datetime "end_date", default: "2020-07-19 19:59:59"
+    t.boolean "achieve", default: false
+    t.time "progress", default: "2000-01-01 00:00:00"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_weekly_targets_on_user_id"
+  end
+
   add_foreign_key "comments", "time_reports"
   add_foreign_key "comments", "users"
   add_foreign_key "experience_records", "time_reports"
@@ -110,4 +122,5 @@ ActiveRecord::Schema.define(version: 2020_07_09_004836) do
   add_foreign_key "experiences", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "time_reports", "users"
+  add_foreign_key "weekly_targets", "users"
 end
