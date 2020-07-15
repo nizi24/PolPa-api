@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Like", type: :request do
+RSpec.describe "V1::Like", type: :request do
   let(:user) { create(:user) }
   let(:time_report) { create(:time_report) }
   let(:comment) { create(:comment) }

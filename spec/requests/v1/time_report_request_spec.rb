@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'TimeReports', type: :request do
+RSpec.describe 'V1::TimeReports', type: :request do
 
   let!(:user) { create(:user) }
   let!(:experience) { create(:experience, user: user) }
