@@ -8,6 +8,16 @@ class User < ApplicationRecord
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
     experiences.level') }
+  scope :main_tags, -> (id) { includes(time_reports:
+    { time_report_tag_links: :tag })
+    .left_joins(time_reports:
+      { time_report_tag_links: :tag })
+    .select('COUNT(time_report_tag_links.*), tags.name, users.id')
+    .group('tags.name, users.id')
+    .where('users.id = ?', id)
+    .limit(5)
+    .order('COUNT(time_report_tag_links.time_report_id) DESC')
+  }
 
   validates :name, presence: true, length: { maximum: 20 }
   validates :email, presence: true, length: { maximum: 255 },

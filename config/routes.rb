@@ -6,5 +6,8 @@ Rails.application.routes.draw do
     resource :like, only: [ :create ] do
       delete :delete, on: :collection
     end
+    # resources :tags do
+    #
+    # end
   end
 end
