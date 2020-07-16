@@ -22,7 +22,7 @@ class User < ApplicationRecord
     .limit(5)
     .order('COUNT(time_report_tag_links.time_report_id) DESC')
   }
-  scope :search_time_reports_in_tags, ->(user_id, tag) {
+  scope :search_time_reports_in_tags, -> (user_id, tag) {
     includes_tags.left_joins_tags
     .select('time_reports.id')
     .where('users.id = ? AND tags.name LIKE ?', user_id, "%#{tag}%")
@@ -37,4 +37,9 @@ class User < ApplicationRecord
   validates :screen_name, presence: true, length: { in: 5..15 },
     uniqueness:   { case_sensitive: false },
     format: { with: VALID_SCREEN_NAME_REGEX }
+
+  def target_of_the_week
+    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    weekly_targets.where('weekly_targets.created_at >= ?', weekly_start)
+  end
 end

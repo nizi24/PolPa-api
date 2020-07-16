@@ -14,5 +14,9 @@ FactoryBot.define do
     trait :comments do
       after(:create) { |t| create_list(:comment, 3, time_report: t) }
     end
+
+    trait :last_week do
+      study_date { Time.current.prev_week }
+    end
   end
 end

@@ -107,8 +107,8 @@ ActiveRecord::Schema.define(version: 2020_07_15_234112) do
   create_table "weekly_targets", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.time "target_time", null: false
-    t.datetime "start_date", default: "2020-07-13 04:00:00"
-    t.datetime "end_date", default: "2020-07-20 03:59:59"
+    t.datetime "start_date", default: "2020-07-12 19:00:00"
+    t.datetime "end_date", default: "2020-07-19 18:59:59"
     t.boolean "achieve", default: false
     t.time "progress", default: "2000-01-01 00:00:00"
     t.datetime "created_at", precision: 6, null: false

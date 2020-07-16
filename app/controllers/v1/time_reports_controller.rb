@@ -24,6 +24,7 @@ class V1::TimeReportsController < ApplicationController
         tags = TagRecorder.new(time_report).create_links(params[:tags])
         experience = Experience.find_by(user_id: user.id)
         required_exp = RequiredExp.find_by(level: experience.level)
+        weekly_target = WeeklyTargetProcessor.new(user)
 
         render json: {
           time_report: time_report.to_json(include: [:experience_record, :tags,

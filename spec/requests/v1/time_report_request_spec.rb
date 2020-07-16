@@ -13,7 +13,7 @@ RSpec.describe 'V1::TimeReports', type: :request do
       json = JSON.parse(response.body)
       time_report = JSON.parse(json['time_report'])
       expect(response.status).to eq 200
-      expect(time_report['study_time']).to eq '2000-01-01T00:30:00.000Z'
+      expect(time_report['study_time']).to eq '2000-01-02T00:30:00.000+09:00'
       expect(time_report['experience_record']['experience_point']).to eq 30
     end
   end

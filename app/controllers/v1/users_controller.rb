@@ -20,9 +20,9 @@ class V1::UsersController < ApplicationController
         comments: { include: { user: { except: [:uid, :email]}},
         methods: :likes_count }],
         methods: :likes_count }},
-        except:  [:uid, :email]),
+        except:  [:uid, :email], methods: :target_of_the_week),
         required_exp: required_exp,
-        main_tags: main_tags}
+        main_tags: main_tags }
     end
   end
 
@@ -39,6 +39,7 @@ class V1::UsersController < ApplicationController
   def weekly_target_setting
     user = User.find(params[:id])
     weekly_target = user.weekly_targets.build(target_time: params[:target_time])
+    WeeklyTargetProcessor.new(user).totalization(weekly_target)
     if weekly_target.save!
       render json: { weekly_target: weekly_target }
     end
