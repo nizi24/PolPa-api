@@ -1,9 +1,12 @@
 class User < ApplicationRecord
-  has_many :time_reports, -> { order(created_at: :desc) }, dependent: :destroy
-  has_many :experience_records, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :likes, dependent: :destroy
-  has_one :experience, dependent: :destroy
+  with_options dependent: :destroy do |assoc|
+    assoc.has_many :time_reports, -> { order(study_date: :desc) }
+    assoc.has_many :experience_records
+    assoc.has_many :comments
+    assoc.has_many :likes
+    assoc.has_many :weekly_targets
+    assoc.has_one :experience
+  end
 
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
@@ -23,7 +26,7 @@ class User < ApplicationRecord
     includes_tags.left_joins_tags
     .select('time_reports.id')
     .where('users.id = ? AND tags.name LIKE ?', user_id, "%#{tag}%")
-    .order('time_reports.created_at')
+    .order('time_reports.study_date')
   }
 
   validates :name, presence: true, length: { maximum: 20 }

@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :time_report do
     study_time { '0:30' }
     memo { '頑張りました!' }
+    study_date { Time.current }
     association :user
 
     trait :tags do

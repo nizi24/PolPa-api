@@ -83,6 +83,6 @@ class V1::TimeReportsController < ApplicationController
   end
 
   private def time_report_params
-    params.require(:time_report).permit(:memo, :study_time)
+    params.require(:time_report).permit(:memo, :study_time, :study_date)
   end
 end
