@@ -41,6 +41,6 @@ class User < ApplicationRecord
 
   def target_of_the_week
     weekly_start = Time.current.beginning_of_week.since(4.hours)
-    weekly_targets.where('weekly_targets.created_at >= ?', weekly_start)
+    weekly_targets.where('weekly_targets.start_date = ?', weekly_start)
   end
 end
