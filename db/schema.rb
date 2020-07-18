@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_18_012326) do
+ActiveRecord::Schema.define(version: 2020_07_20_053201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,8 @@ ActiveRecord::Schema.define(version: 2020_07_18_012326) do
     t.time "progress", default: "2000-01-01 00:00:00"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "checked", default: false
+    t.index ["user_id", "checked"], name: "index_weekly_targets_on_user_id_and_checked"
     t.index ["user_id", "start_date", "end_date"], name: "index_weekly_targets_on_user_id_and_start_date_and_end_date", unique: true
     t.index ["user_id"], name: "index_weekly_targets_on_user_id"
   end

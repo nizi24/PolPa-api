@@ -50,9 +50,11 @@ class WeeklyTargetProcessor
     gain_exp = 100
     gain_exp += weekly_target.target_time.hour.to_i * 20
     gain_exp += weekly_target.target_time.min.to_i / 3
-    experience_record = weekly_target.experience_record
-      .build(experience_point: gain_exp, user: weekly_target.user)
+    experience_record = weekly_target
+      .build_weekly_target_experience_record(experience_point: gain_exp, user: weekly_target.user)
     experience_record.save!
-    experience_record
+    weekly_target.user.experience.total += gain_exp
+    ExperienceRecorder.new(weekly_target.user).check_level
+    weekly_target.user.experience.save!
   end
 end

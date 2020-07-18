@@ -43,4 +43,12 @@ class User < ApplicationRecord
     weekly_start = Time.current.beginning_of_week.since(4.hours)
     weekly_targets.where('weekly_targets.start_date = ?', weekly_start)
   end
+
+  def target_of_non_checked
+    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    prev_weekly_target = weekly_targets.find_by('weekly_targets.start_date < ?
+      AND checked = false', weekly_start)
+    prev_weekly_target.check if prev_weekly_target
+    prev_weekly_target
+  end
 end

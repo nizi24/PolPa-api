@@ -5,6 +5,7 @@ class CreateWeeklyTargets < ActiveRecord::Migration[6.0]
       t.time :target_time, null: false
       t.datetime :start_date,
         default: Time.current.beginning_of_week.since(4.hours)
+        # Migrationを実行した時刻になる
       t.datetime :end_date,
         default: Time.current.end_of_week.since(4.hours)
       t.boolean :achieve, default: false
