@@ -22,5 +22,7 @@ module App
     config.load_defaults 6.0
     config.time_zone = "Tokyo"
     config.api_only = true
+    config.autoload_paths += %W(#{config.root}/lib)
+    config.enable_dependency_loading = true
   end
 end

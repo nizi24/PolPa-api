@@ -36,15 +36,6 @@ class V1::UsersController < ApplicationController
     end
   end
 
-  def weekly_target_setting
-    user = User.find(params[:id])
-    weekly_target = user.weekly_targets.build(target_time: params[:target_time])
-    WeeklyTargetProcessor.new(user).totalization(weekly_target)
-    if weekly_target.save!
-      render json: { weekly_target: weekly_target }
-    end
-  end
-
   private def user_params
     params.require(:user).permit(:name, :email, :screen_name, :uid)
   end

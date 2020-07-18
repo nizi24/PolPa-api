@@ -19,4 +19,40 @@ class WeeklyTargetProcessor
     weekly_target.progress = time_format
     weekly_target.save!
   end
+
+  def add_progress(time_report)
+    start_date = Time.current.beginning_of_week.since(4.hours)
+    weekly_target = @user.weekly_targets
+      .find_by('weekly_targets.start_date = ?', start_date)
+    if weekly_target && time_report.study_date >= start_date
+      weekly_target.progress += time_report.study_time.hour * 3600
+      weekly_target.progress += time_report.study_time.min * 60
+      weekly_target.save!
+      weekly_target
+    end
+  end
+
+  # タイムレポートの更新前に減算する
+  def sub_progress(time_report)
+    start_date = Time.current.beginning_of_week.since(4.hours)
+    weekly_target = @user.weekly_targets
+      .find_by('weekly_targets.start_date = ?', start_date)
+    if weekly_target && time_report.study_date >= start_date
+      weekly_target.progress -= time_report.study_time.hour * 3600
+      weekly_target.progress -= time_report.study_time.min * 60
+      weekly_target.save!
+      weekly_target
+    end
+  end
+
+  # 固定で100exp 追加で目標時間の1/3のexp を加算する
+  def experience_record(weekly_target)
+    gain_exp = 100
+    gain_exp += weekly_target.target_time.hour.to_i * 20
+    gain_exp += weekly_target.target_time.min.to_i / 3
+    experience_record = weekly_target.experience_record
+      .build(experience_point: gain_exp, user: weekly_target.user)
+    experience_record.save!
+    experience_record
+  end
 end

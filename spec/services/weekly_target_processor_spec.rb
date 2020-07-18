@@ -9,8 +9,17 @@ describe WeeklyTargetProcessor do
       prev_week_report = create(:time_report, :last_week, user: user)
       weekly_target = create(:weekly_target, user: user)
       WeeklyTargetProcessor.new(user).totalization(weekly_target)
-      byebug
-      expect(weekly_target.process).to eq 90
+      expect(weekly_target.progress).to eq '2000-01-01 01:30:00.000000000 +0900'
+    end
+  end
+
+  describe 'add_progress' do
+    it 'タイムレポートの時間が加算されること' do
+      weekly_target = create(:weekly_target, user: user)
+      WeeklyTargetProcessor.new(user).totalization(weekly_target)
+      time_report = create(:time_report, study_time: '1:30', user: user)
+      weekly_target = WeeklyTargetProcessor.new(user).add_progress(time_report)
+      expect(weekly_target.progress).to eq '2000-01-01 01:30:00.000000000 +0900'
     end
   end
 end

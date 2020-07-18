@@ -34,6 +34,17 @@ class ExperienceRecorder
     experience_record.destroy!
   end
 
+  def check_level
+    required = RequiredExp.find_by(level: experience.level)
+    sub_total = required.total_experience - experience.total
+    if sub_total <= 0
+      experience.level += 1
+      check_level
+    else
+      experience.to_next = sub_total
+    end
+  end
+
   private def cal_exp(time_report)
     hours = time_report.study_time.hour
     minutes = time_report.study_time.min
@@ -54,17 +65,6 @@ class ExperienceRecorder
     experience.to_next -= old_exp
     experience_record.experience_point = gain_exp
     experience_record
-  end
-
-  private def check_level
-    required = RequiredExp.find_by(level: experience.level)
-    sub_total = required.total_experience - experience.total
-    if sub_total <= 0
-      experience.level += 1
-      check_level
-    else
-      experience.to_next = sub_total
-    end
   end
 
   private def check_level_down

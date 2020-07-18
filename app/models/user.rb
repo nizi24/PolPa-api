@@ -5,6 +5,7 @@ class User < ApplicationRecord
     assoc.has_many :comments
     assoc.has_many :likes
     assoc.has_many :weekly_targets
+    assoc.has_many :weekly_target_experience_records
     assoc.has_one :experience
   end
 

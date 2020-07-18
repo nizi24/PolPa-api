@@ -41,16 +41,4 @@ RSpec.describe "V1::Users", type: :request do
       expect(response.status).to eq 201
     end
   end
-
-  describe '#weekly_target_setting' do
-    it '目標を設定できること' do
-      skip 'paramsがなぜかネストされている'
-      target_time = { target_time: '7:0' }
-      expect {
-        post weekly_target_setting_v1_user_path(user.id), params: {
-          target_time: target_time
-        }
-      }.to change(user.weekly_targets, :count).by(1)
-    end
-  end
 end
