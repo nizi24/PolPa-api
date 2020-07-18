@@ -24,13 +24,16 @@ class V1::TimeReportsController < ApplicationController
         tags = TagRecorder.new(time_report).create_links(params[:tags])
         experience = Experience.find_by(user_id: user.id)
         required_exp = RequiredExp.find_by(level: experience.level)
+        weekly_target = WeeklyTargetProcessor.new(user)
+          .add_progress(time_report)
 
         render json: {
           time_report: time_report.to_json(include: [:experience_record, :tags,
           comments: { methods: :likes_count }],
           methods: :likes_count ),
           experience: experience,
-          required_exp: required_exp
+          required_exp: required_exp,
+          weekly_target: weekly_target
         }, status: :created
 
       else
@@ -42,6 +45,7 @@ class V1::TimeReportsController < ApplicationController
   def update
     user = User.find(params[:user_id])
     time_report = TimeReport.find(params[:id])
+    WeeklyTargetProcessor.new(user).sub_progress(time_report)
     time_report.assign_attributes(time_report_params)
 
     ActiveRecord::Base.transaction do
@@ -51,6 +55,8 @@ class V1::TimeReportsController < ApplicationController
         tags = TagRecorder.new(time_report).create_links(params[:tags])
         experience = Experience.find_by(user_id: user.id)
         required_exp = RequiredExp.find_by(level: experience.level)
+        weekly_target = WeeklyTargetProcessor.new(user)
+          .add_progress(time_report)
 
           render json: {
             time_report: time_report.to_json(include: [:experience_record, :tags,
@@ -58,7 +64,8 @@ class V1::TimeReportsController < ApplicationController
             methods: :likes_count }],
             methods: :likes_count ),
             experience: experience,
-            required_exp: required_exp
+            required_exp: required_exp,
+            weekly_target: weekly_target
           }
       end
     end
@@ -68,21 +75,22 @@ class V1::TimeReportsController < ApplicationController
     user = User.find(params[:user_id])
     time_report = TimeReport.includes(:likes, { comments: :likes })
       .find(params[:id])
+    weekly_target = WeeklyTargetProcessor.new(user).sub_progress(time_report)
 
     ActiveRecord::Base.transaction do
-
       ExperienceRecorder.new(user).delete_record(time_report)
       time_report.destroy!
       experience = user.experience
       required_exp = RequiredExp.find_by(level: experience.level)
       render json: {
         experience: experience,
-        required_exp: required_exp
+        required_exp: required_exp,
+        weekly_target: weekly_target
       }
     end
   end
 
   private def time_report_params
-    params.require(:time_report).permit(:memo, :study_time)
+    params.require(:time_report).permit(:memo, :study_time, :study_date)
   end
 end

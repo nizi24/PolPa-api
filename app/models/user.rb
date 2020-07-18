@@ -1,9 +1,13 @@
 class User < ApplicationRecord
-  has_many :time_reports, -> { order(created_at: :desc) }, dependent: :destroy
-  has_many :experience_records, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :likes, dependent: :destroy
-  has_one :experience, dependent: :destroy
+  with_options dependent: :destroy do |assoc|
+    assoc.has_many :time_reports, -> { order(study_date: :desc) }
+    assoc.has_many :experience_records
+    assoc.has_many :comments
+    assoc.has_many :likes
+    assoc.has_many :weekly_targets
+    assoc.has_many :weekly_target_experience_records
+    assoc.has_one :experience
+  end
 
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
@@ -19,11 +23,11 @@ class User < ApplicationRecord
     .limit(5)
     .order('COUNT(time_report_tag_links.time_report_id) DESC')
   }
-  scope :search_time_reports_in_tags, ->(user_id, tag) {
+  scope :search_time_reports_in_tags, -> (user_id, tag) {
     includes_tags.left_joins_tags
     .select('time_reports.id')
     .where('users.id = ? AND tags.name LIKE ?', user_id, "%#{tag}%")
-    .order('time_reports.created_at')
+    .order('time_reports.study_date')
   }
 
   validates :name, presence: true, length: { maximum: 20 }
@@ -34,4 +38,17 @@ class User < ApplicationRecord
   validates :screen_name, presence: true, length: { in: 5..15 },
     uniqueness:   { case_sensitive: false },
     format: { with: VALID_SCREEN_NAME_REGEX }
+
+  def target_of_the_week
+    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    weekly_targets.where('weekly_targets.start_date = ?', weekly_start)
+  end
+
+  def target_of_non_checked
+    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    prev_weekly_target = weekly_targets.find_by('weekly_targets.start_date < ?
+      AND checked = false', weekly_start)
+    prev_weekly_target.check if prev_weekly_target
+    prev_weekly_target
+  end
 end

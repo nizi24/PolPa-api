@@ -10,6 +10,7 @@ gem 'active_model_serializers'
 gem 'rack-cors'
 gem 'date_validator'
 gem 'bullet'
+gem 'whenever', require: false
 
 gem 'bootsnap', '>= 1.4.2', require: false
 

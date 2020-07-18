@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_004836) do
+ActiveRecord::Schema.define(version: 2020_07_20_053201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,12 +27,11 @@ ActiveRecord::Schema.define(version: 2020_07_09_004836) do
 
   create_table "experience_records", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "time_report_id"
     t.integer "experience_point", null: false
     t.float "bonus_multiplier", default: 1.0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["time_report_id"], name: "index_experience_records_on_time_report_id"
+    t.integer "time_report_id"
     t.index ["user_id"], name: "index_experience_records_on_user_id"
   end
 
@@ -89,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_07_09_004836) do
     t.text "memo"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "study_date", null: false
     t.index ["user_id"], name: "index_time_reports_on_user_id"
   end
 
@@ -103,11 +103,38 @@ ActiveRecord::Schema.define(version: 2020_07_09_004836) do
     t.index ["screen_name"], name: "index_users_on_screen_name", unique: true
   end
 
+  create_table "weekly_target_experience_records", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "weekly_target_id", null: false
+    t.integer "experience_point", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_weekly_target_experience_records_on_user_id"
+    t.index ["weekly_target_id"], name: "index_weekly_target_experience_records_on_weekly_target_id"
+  end
+
+  create_table "weekly_targets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.time "target_time", null: false
+    t.datetime "start_date", default: "2020-07-12 19:00:00"
+    t.datetime "end_date", default: "2020-07-19 18:59:59"
+    t.boolean "achieve", default: false
+    t.time "progress", default: "2000-01-01 00:00:00"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "checked", default: false
+    t.index ["user_id", "checked"], name: "index_weekly_targets_on_user_id_and_checked"
+    t.index ["user_id", "start_date", "end_date"], name: "index_weekly_targets_on_user_id_and_start_date_and_end_date", unique: true
+    t.index ["user_id"], name: "index_weekly_targets_on_user_id"
+  end
+
   add_foreign_key "comments", "time_reports"
   add_foreign_key "comments", "users"
-  add_foreign_key "experience_records", "time_reports"
   add_foreign_key "experience_records", "users"
   add_foreign_key "experiences", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "time_reports", "users"
+  add_foreign_key "weekly_target_experience_records", "users"
+  add_foreign_key "weekly_target_experience_records", "weekly_targets"
+  add_foreign_key "weekly_targets", "users"
 end
