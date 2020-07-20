@@ -4,8 +4,10 @@ class V1::UsersController < ApplicationController
     if params[:uid]
       @user = User.join_exp.find_by(uid: params[:uid])
       likes = @user.likes
+      following = @user.following
       render json: { user: @user,
-        likes: likes.to_json(only: [:likeable_type, :likeable_id])
+        likes: likes.to_json(only: [:likeable_type, :likeable_id]),
+        following: following.to_json(only: :id)
       }
     end
   end
@@ -23,7 +25,7 @@ class V1::UsersController < ApplicationController
         methods: :likes_count }],
         methods: :likes_count }},
         except:  [:uid, :email],
-        methods: :target_of_the_week),
+        methods: [:target_of_the_week, :follower_count, :following_count]),
         prev_weekly_target: prev_weekly_target.to_json(include: :weekly_target_experience_record),
         required_exp: required_exp,
         main_tags: main_tags }

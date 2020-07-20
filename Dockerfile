@@ -21,8 +21,6 @@ RUN apk update && \
     bundle install -j4 && \
     apk del build-dependencies
 
-RUN bundle exec whenever --update-crontab
-
 COPY . .
 
 CMD ["rails", "server", "-b", "0.0.0.0"]

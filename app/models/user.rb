@@ -11,7 +11,14 @@ class User < ApplicationRecord
       foreign_key: 'action_user_id'
     assoc.has_many :notices, class_name: 'Notice',
       foreign_key: 'received_user_id'
+    assoc.has_many :active_relationships, class_name: 'Relationship',
+      foreign_key: 'follower_id'
+    assoc.has_many :passive_relationships, class_name: 'Relationship',
+      foreign_key: 'followed_id'
   end
+
+  has_many :following, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships, source: :follower
 
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
@@ -66,5 +73,21 @@ class User < ApplicationRecord
 
   def notice_nonchecked
     notices.where(checked: false)
+  end
+
+  def follow(other_user)
+    self.following << other_user
+  end
+
+  def unfollow(other_user)
+    self.following.delete(other_user)
+  end
+
+  def following_count
+    self.active_relationships.length
+  end
+
+  def follower_count
+    self.passive_relationships.length
   end
 end
