@@ -27,6 +27,17 @@ RSpec.describe "V1::Like", type: :request do
         post v1_like_path, params: { like: like_params }
       }.to change(comment.likes, :count).by(1)
     end
+
+    it 'commentにlikeした時に通知が送信されること' do
+      like_params = {
+        likeable_id: comment.id,
+        likeable_type: 'Comment',
+        user_id: user.id
+      }
+      expect {
+        post v1_like_path, params: { like: like_params }
+      }.to change(comment.user.notices, :count).by(1)
+    end
   end
 
   describe '#destroy' do

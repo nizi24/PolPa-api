@@ -3,6 +3,7 @@ class V1::LikesController < ApplicationController
   def create
     like = Like.new(like_params)
     if like.save
+      like.notice
       render status: :created
     end
   end

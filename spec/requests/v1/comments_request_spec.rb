@@ -14,6 +14,14 @@ RSpec.describe "V1::Comments", type: :request do
         }.to change(user.comments, :count).by(1)
       }.to change(time_report.comments, :count).by(1)
     end
+
+    it '通知が作成されること' do
+      comment_params = attributes_for(:comment, user_id: user.id,
+        time_report_id: time_report.id)
+      expect {
+        post v1_comments_path, params: { comment: comment_params }
+      }.to change(time_report.user.notices, :count).by(1)
+    end
   end
 
   describe '#destroy' do
