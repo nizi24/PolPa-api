@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_20_053201) do
+ActiveRecord::Schema.define(version: 2020_07_20_053202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,11 +27,12 @@ ActiveRecord::Schema.define(version: 2020_07_20_053201) do
 
   create_table "experience_records", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.bigint "time_report_id"
     t.integer "experience_point", null: false
     t.float "bonus_multiplier", default: 1.0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "time_report_id"
+    t.index ["time_report_id"], name: "index_experience_records_on_time_report_id"
     t.index ["user_id"], name: "index_experience_records_on_user_id"
   end
 
@@ -54,6 +55,19 @@ ActiveRecord::Schema.define(version: 2020_07_20_053201) do
     t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable_type_and_likeable_id"
     t.index ["user_id", "likeable_type", "likeable_id"], name: "index_likes_on_user_id_and_likeable_type_and_likeable_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "notices", force: :cascade do |t|
+    t.integer "action_user_id", null: false
+    t.integer "received_user_id", null: false
+    t.string "noticeable_type"
+    t.bigint "noticeable_id"
+    t.string "like_type"
+    t.integer "time_report_id"
+    t.boolean "checked", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["noticeable_type", "noticeable_id"], name: "index_notices_on_noticeable_type_and_noticeable_id"
   end
 
   create_table "required_exps", force: :cascade do |t|
@@ -116,8 +130,8 @@ ActiveRecord::Schema.define(version: 2020_07_20_053201) do
   create_table "weekly_targets", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.time "target_time", null: false
-    t.datetime "start_date", default: "2020-07-12 19:00:00"
-    t.datetime "end_date", default: "2020-07-19 18:59:59"
+    t.datetime "start_date", default: "2020-07-19 19:00:00"
+    t.datetime "end_date", default: "2020-07-26 18:59:59"
     t.boolean "achieve", default: false
     t.time "progress", default: "2000-01-01 00:00:00"
     t.datetime "created_at", precision: 6, null: false
@@ -130,6 +144,7 @@ ActiveRecord::Schema.define(version: 2020_07_20_053201) do
 
   add_foreign_key "comments", "time_reports"
   add_foreign_key "comments", "users"
+  add_foreign_key "experience_records", "time_reports"
   add_foreign_key "experience_records", "users"
   add_foreign_key "experiences", "users"
   add_foreign_key "likes", "users"

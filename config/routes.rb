@@ -6,6 +6,9 @@ Rails.application.routes.draw do
       resources :tags, only: [] do
         get 'search', on: :collection
       end
+      resources :notices, only: [:index] do
+        get 'check', on: :collection
+      end
     end
     resources :time_reports, except: [:new, :edit]
     resources :comments, only: [:create, :destroy]

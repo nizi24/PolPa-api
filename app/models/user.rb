@@ -7,6 +7,10 @@ class User < ApplicationRecord
     assoc.has_many :weekly_targets
     assoc.has_many :weekly_target_experience_records
     assoc.has_one :experience
+    assoc.has_many :action, class_name: 'Notice',
+      foreign_key: 'action_user_id'
+    assoc.has_many :notices, class_name: 'Notice',
+      foreign_key: 'received_user_id'
   end
 
   scope :join_exp, -> { joins(:experience).select('users.*,
@@ -17,11 +21,11 @@ class User < ApplicationRecord
   scope :left_joins_tags, -> { left_joins(time_reports:
     { time_report_tag_links: :tag }) }
   scope :main_tags, -> (id) { includes_tags.left_joins_tags
-    .select('COUNT(time_report_tag_links.*), tags.name, users.id')
+    .select('COUNT(time_report_tag_links.*) AS count, tags.name, users.id')
     .group('tags.name, users.id')
     .where('users.id = ?', id)
     .limit(5)
-    .order('COUNT(time_report_tag_links.time_report_id) DESC')
+    .order('count DESC')
   }
   scope :search_time_reports_in_tags, -> (user_id, tag) {
     includes_tags.left_joins_tags
@@ -50,5 +54,17 @@ class User < ApplicationRecord
       AND checked = false', weekly_start)
     prev_weekly_target.check if prev_weekly_target
     prev_weekly_target
+  end
+
+  def notice
+    notices = self.notices.includes(:action_user)
+      .joins(:action_user)
+      .select('notices.*, users.screen_name')
+      .limit(30)
+      .order('notices.created_at DESC')
+  end
+
+  def notice_nonchecked
+    notices.where(checked: false)
   end
 end
