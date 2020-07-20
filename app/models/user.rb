@@ -82,4 +82,12 @@ class User < ApplicationRecord
   def unfollow(other_user)
     self.following.delete(other_user)
   end
+
+  def following_count
+    self.active_relationships.length
+  end
+
+  def follower_count
+    self.passive_relationships.length
+  end
 end
