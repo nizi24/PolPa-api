@@ -53,6 +53,7 @@ class User < ApplicationRecord
   validates :screen_name, presence: true, length: { in: 5..15 },
     uniqueness:   { case_sensitive: false },
     format: { with: VALID_SCREEN_NAME_REGEX }
+  validates :profile, length: { maximum: 160 }
 
   def target_of_the_week
     weekly_start = Time.current.beginning_of_week.since(4.hours)

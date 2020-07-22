@@ -27,7 +27,7 @@ class V1::UsersController < ApplicationController
         methods: :likes_count }],
         methods: :likes_count }},
         except:  [:uid, :email],
-        methods: [:target_of_the_week, :follower_count, :following_count]),
+        methods: [:target_of_the_week, :follower_count, :following_count, :avatar_url]),
         prev_weekly_target: prev_weekly_target.to_json(include: :weekly_target_experience_record),
         required_exp: required_exp,
         main_tags: main_tags }
@@ -63,6 +63,8 @@ class V1::UsersController < ApplicationController
   end
 
   private def user_params
-    params.require(:user).permit(:name, :email, :screen_name, :uid, :avatar)
+    params.require(:user).permit(
+      :name, :email, :screen_name, :uid, :avatar, :profile
+    )
   end
 end
