@@ -7,10 +7,13 @@ class Relationship < ApplicationRecord
   validates :followed_id, presence: true
 
   def notice
-    notice = notices.build(
-      action_user_id: follower_id,
-      received_user_id: followed_id
-    )
-    notice.save!
+    user = User.find(followed_id)
+    if user.setting.follow_notice
+      notice = notices.build(
+        action_user_id: follower_id,
+        received_user_id: followed_id
+      )
+      notice.save!
+    end
   end
 end

@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Rails.application.routes.url_helpers
+
   with_options dependent: :destroy do |assoc|
     assoc.has_many :time_reports, -> { order(study_date: :desc) }
     assoc.has_many :experience_records
@@ -7,6 +9,7 @@ class User < ApplicationRecord
     assoc.has_many :weekly_targets
     assoc.has_many :weekly_target_experience_records
     assoc.has_one :experience
+    assoc.has_one :setting
     assoc.has_many :action, class_name: 'Notice',
       foreign_key: 'action_user_id'
     assoc.has_many :notices, class_name: 'Notice',
@@ -17,6 +20,7 @@ class User < ApplicationRecord
       foreign_key: 'followed_id'
   end
 
+  has_one_attached :avatar
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
 
@@ -41,7 +45,7 @@ class User < ApplicationRecord
     .order('time_reports.study_date')
   }
 
-  validates :name, presence: true, length: { maximum: 20 }
+  validates :name, presence: true, length: { maximum: 30 }
   validates :email, presence: true, length: { maximum: 255 },
     uniqueness:   { case_sensitive: false }
   validates :uid, presence: true
@@ -49,6 +53,7 @@ class User < ApplicationRecord
   validates :screen_name, presence: true, length: { in: 5..15 },
     uniqueness:   { case_sensitive: false },
     format: { with: VALID_SCREEN_NAME_REGEX }
+  validates :profile, length: { maximum: 160 }
 
   def target_of_the_week
     weekly_start = Time.current.beginning_of_week.since(4.hours)
@@ -89,5 +94,9 @@ class User < ApplicationRecord
 
   def follower_count
     self.passive_relationships.length
+  end
+
+  def avatar_url
+    avatar.attached? ? url_for(avatar) : nil
   end
 end

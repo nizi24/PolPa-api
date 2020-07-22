@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :v1 do
-    resources :users, only: [:index, :show, :create] do
+    resources :users, only: [:index, :show, :create, :update, :edit] do
+      resource :setting, only: [:edit, :update]
       resource :weekly_target, only: [:create]
       resources :tags, only: [] do
         get 'search', on: :collection
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
       member do
         post '/follow', to: 'relationships#create'
         delete '/unfollow', to: 'relationships#destroy'
+        patch '/update_avatar', to: 'users#update_avatar'
       end
     end
     resources :time_reports, except: [:new, :edit]
