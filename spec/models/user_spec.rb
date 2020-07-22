@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to validate_length_of(:screen_name) }
   it { is_expected.to validate_presence_of(:email) }
   it { is_expected.to validate_length_of(:email) }
+  it { is_expected.to validate_length_of(:profile) }
   it { is_expected.to have_many(:time_reports) }
   it { is_expected.to have_many(:experience_records) }
   it { is_expected.to have_many(:comments) }
