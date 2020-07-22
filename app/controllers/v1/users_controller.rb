@@ -34,11 +34,23 @@ class V1::UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
-    if user.save && user.create_experience!
+    if user.save && user.create_experience! && user.create_setting!
       user = User.join_exp.find(user.id)
       render json: user, status: :created
     else
       render json: user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    user = User.find(params[:id])
+    render json: { user: user }
+  end
+
+  def update
+    user = User.find(params[:id])
+    if user.update(user_params)
+      render json: { user: user }
     end
   end
 

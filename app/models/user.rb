@@ -7,6 +7,7 @@ class User < ApplicationRecord
     assoc.has_many :weekly_targets
     assoc.has_many :weekly_target_experience_records
     assoc.has_one :experience
+    assoc.has_one :setting
     assoc.has_many :action, class_name: 'Notice',
       foreign_key: 'action_user_id'
     assoc.has_many :notices, class_name: 'Notice',

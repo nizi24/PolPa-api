@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_20_053203) do
+ActiveRecord::Schema.define(version: 2020_07_20_135408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,17 @@ ActiveRecord::Schema.define(version: 2020_07_20_053203) do
     t.index ["level"], name: "index_required_exps_on_level", unique: true
   end
 
+  create_table "settings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.boolean "comment_notice", default: true
+    t.boolean "comment_like_notice", default: true
+    t.boolean "time_report_like_notice", default: true
+    t.boolean "follow_notice", default: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_settings_on_user_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -158,6 +169,7 @@ ActiveRecord::Schema.define(version: 2020_07_20_053203) do
   add_foreign_key "experience_records", "users"
   add_foreign_key "experiences", "users"
   add_foreign_key "likes", "users"
+  add_foreign_key "settings", "users"
   add_foreign_key "time_reports", "users"
   add_foreign_key "weekly_target_experience_records", "users"
   add_foreign_key "weekly_target_experience_records", "weekly_targets"
