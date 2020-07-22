@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       member do
         post '/follow', to: 'relationships#create'
         delete '/unfollow', to: 'relationships#destroy'
+        patch '/update_avatar', to: 'users#update_avatar'
       end
     end
     resources :time_reports, except: [:new, :edit]

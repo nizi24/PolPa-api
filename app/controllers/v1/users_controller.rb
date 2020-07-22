@@ -2,12 +2,14 @@ class V1::UsersController < ApplicationController
 
   def index
     if params[:uid]
+      user = User.find_by(uid: params[:uid])
       @user = User.join_exp.find_by(uid: params[:uid])
       likes = @user.likes
       following = @user.following
-      render json: { user: @user,
+      render json: { user: @user.to_json(methods: :avatar_url),
         likes: likes.to_json(only: [:likeable_type, :likeable_id]),
-        following: following.to_json(only: :id)
+        following: following.to_json(only: :id),
+        avatar: user.to_json(methods: :avatar_url)
       }
     end
   end
@@ -54,7 +56,13 @@ class V1::UsersController < ApplicationController
     end
   end
 
+  def update_avatar
+    user = User.find(params[:id])
+    user.avatar.attach(params[:avatar])
+    render json: { user: user.to_json(methods: :avatar_url) }
+  end
+
   private def user_params
-    params.require(:user).permit(:name, :email, :screen_name, :uid)
+    params.require(:user).permit(:name, :email, :screen_name, :uid, :avatar)
   end
 end
