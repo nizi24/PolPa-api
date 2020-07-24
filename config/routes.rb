@@ -14,6 +14,9 @@ Rails.application.routes.draw do
         delete '/unfollow', to: 'relationships#destroy'
         patch '/update_avatar', to: 'users#update_avatar'
       end
+      collection do
+        get '/experience_rank', to: 'users#experience_rank'
+      end
     end
     resources :time_reports, except: [:new, :edit]
     resources :comments, only: [:create, :destroy]

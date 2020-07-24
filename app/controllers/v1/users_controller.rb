@@ -2,14 +2,14 @@ class V1::UsersController < ApplicationController
 
   def index
     if params[:uid]
-      user = User.find_by(uid: params[:uid])
       @user = User.join_exp.find_by(uid: params[:uid])
       likes = @user.likes
       following = @user.following
+      required_exp = RequiredExp.find_by(level: @user.experience.level)
       render json: { user: @user.to_json(methods: :avatar_url),
         likes: likes.to_json(only: [:likeable_type, :likeable_id]),
         following: following.to_json(only: :id),
-        avatar: user.to_json(methods: :avatar_url)
+        required_exp: required_exp
       }
     end
   end
@@ -60,6 +60,16 @@ class V1::UsersController < ApplicationController
     user = User.find(params[:id])
     user.avatar.attach(params[:avatar])
     render json: { user: user.to_json(methods: :avatar_url) }
+  end
+
+  def experience_rank
+    if params[:weekly]
+      term = Time.current.beginning_of_week.since(4.hours)
+    elsif params[:monthly]
+      term = Time.current.beginning_of_month.since(4.hours)
+    end
+    users = User.experience_rank(term)
+    render json: { users: users.to_json(methods: :avatar_url) }
   end
 
   private def user_params

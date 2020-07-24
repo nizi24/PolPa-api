@@ -45,7 +45,7 @@ class User < ApplicationRecord
     .order('time_reports.study_date')
   }
 
-  validates :name, presence: true, length: { maximum: 30 }
+  validates :name, presence: true, length: { maximum: 20 }
   validates :email, presence: true, length: { maximum: 255 },
     uniqueness:   { case_sensitive: false }
   validates :uid, presence: true
@@ -98,5 +98,22 @@ class User < ApplicationRecord
 
   def avatar_url
     avatar.attached? ? url_for(avatar) : nil
+  end
+
+  def self.experience_rank(term = nil)
+    if term
+      User.includes(time_reports: :experience_record)
+        .left_joins(time_reports: :experience_record)
+        .select('SUM(experience_records.experience_point) AS exp, users.name, users.screen_name, users.id')
+        .where('time_reports.study_date >= ?', term)
+        .group('users.id')
+        .limit(10)
+        .order('exp DESC')
+    else
+      User.joins(:experience)
+        .select('experiences.total_experience AS exp, users.name, users.screen_name, users.id')
+        .where(id: Experience.total_experience_rank)
+        .order('experiences.total_experience DESC')
+    end
   end
 end
