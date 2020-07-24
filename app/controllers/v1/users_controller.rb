@@ -22,9 +22,7 @@ class V1::UsersController < ApplicationController
     required_exp = RequiredExp.find_by(level: @user.level)
     if @user
       render json: { user: @user.to_json(include: { time_reports: { include:
-        [:experience_record, :tags,
-        comments: { include: { user: { except: [:uid, :email]}},
-        methods: :likes_count }],
+        [:experience_record, :tags],
         methods: :likes_count }},
         except:  [:uid, :email],
         methods: [:target_of_the_week, :follower_count, :following_count, :avatar_url]),

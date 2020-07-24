@@ -116,4 +116,10 @@ class User < ApplicationRecord
         .order('experiences.total_experience DESC')
     end
   end
+
+  def timeline(offset = 0)
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    TimeReport.where("user_id IN (#{following_ids})", user_id: id).limit(30).offset(offset).newest
+  end
 end

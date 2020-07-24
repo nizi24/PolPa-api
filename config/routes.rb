@@ -18,10 +18,13 @@ Rails.application.routes.draw do
         get '/experience_rank', to: 'users#experience_rank'
       end
     end
-    resources :time_reports, except: [:new, :edit]
+    resources :time_reports, except: [:new, :edit] do
+      resources :comments, only: [:index]
+    end
     resources :comments, only: [:create, :destroy]
     resource :like, only: [:create] do
       delete :delete, on: :collection
     end
+    get '/timeline', to: 'feeds#timeline'
   end
 end
