@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resource :weekly_target, only: [:create]
       resources :tags, only: [] do
         get 'search', on: :collection
+        get 'following', on: :collection
       end
       resources :notices, only: [:index] do
         get 'check', on: :collection
@@ -18,6 +19,10 @@ Rails.application.routes.draw do
         get '/experience_rank', to: 'users#experience_rank'
       end
     end
+    resources :tags, only: [:show] do
+      post :follow, on: :member
+      delete :unfollow, on: :member
+    end
     resources :time_reports, except: [:new, :edit] do
       resources :comments, only: [:index]
     end
@@ -26,5 +31,6 @@ Rails.application.routes.draw do
       delete :delete, on: :collection
     end
     get '/timeline', to: 'feeds#timeline'
+    get '/tag_feed', to: 'feeds#tag_feed'
   end
 end

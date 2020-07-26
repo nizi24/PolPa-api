@@ -18,11 +18,13 @@ class User < ApplicationRecord
       foreign_key: 'follower_id'
     assoc.has_many :passive_relationships, class_name: 'Relationship',
       foreign_key: 'followed_id'
+    assoc.has_many :user_tag_relationships
   end
 
   has_one_attached :avatar
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
+  has_many :tags, through: :user_tag_relationships
 
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
@@ -32,8 +34,8 @@ class User < ApplicationRecord
   scope :left_joins_tags, -> { left_joins(time_reports:
     { time_report_tag_links: :tag }) }
   scope :main_tags, -> (id) { includes_tags.left_joins_tags
-    .select('COUNT(time_report_tag_links.*) AS count, tags.name, users.id')
-    .group('tags.name, users.id')
+    .select('COUNT(time_report_tag_links.*) AS count, tags.name, tags.id')
+    .group('tags.name, tags.id')
     .where('users.id = ?', id)
     .limit(5)
     .order('count DESC')
@@ -121,5 +123,21 @@ class User < ApplicationRecord
     following_ids = "SELECT followed_id FROM relationships
                      WHERE follower_id = :user_id"
     TimeReport.where("user_id IN (#{following_ids})", user_id: id).limit(30).offset(offset).newest
+  end
+
+  def tag_feed(offset = 0)
+    user_id = self.id
+    following_tag_ids = "SELECT tag_id FROM user_tag_relationships
+                        WHERE user_id = #{user_id}"
+    time_report_ids = "SELECT time_report_id FROM time_report_tag_links
+                      WHERE tag_id IN (#{following_tag_ids})"
+    TimeReport.where("id IN (#{time_report_ids})")
+      .limit(30).offset(offset).newest
+  end
+
+  def following_tags
+    following_tag_ids = "SELECT tag_id FROM user_tag_relationships
+                        WHERE user_id = :user_id"
+    Tag.where("id IN (#{following_tag_ids})", user_id: id).order(:name)
   end
 end

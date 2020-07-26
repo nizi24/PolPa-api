@@ -31,16 +31,7 @@ class TagRecorder
       unless current_links.include?(link)
         tag_id = link.tag_id
         link.destroy!
-        destroy_tag(tag_id)
       end
-    end
-  end
-
-  private def destroy_tag(tag_id)
-    other_link = TimeReportTagLink.find_by(tag_id: tag_id)
-    unless other_link
-      tag = Tag.find(tag_id)
-      tag.destroy!
     end
   end
 end

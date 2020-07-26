@@ -5,10 +5,12 @@ class V1::UsersController < ApplicationController
       @user = User.join_exp.find_by(uid: params[:uid])
       likes = @user.likes
       following = @user.following
+      tag_following = @user.user_tag_relationships
       required_exp = RequiredExp.find_by(level: @user.experience.level)
       render json: { user: @user.to_json(methods: :avatar_url),
         likes: likes.to_json(only: [:likeable_type, :likeable_id]),
         following: following.to_json(only: :id),
+        tag_following: tag_following.to_json(only: :tag_id),
         required_exp: required_exp
       }
     end
@@ -17,7 +19,8 @@ class V1::UsersController < ApplicationController
   def show
     @user = User.join_exp.find(params[:id])
     prev_weekly_target = @user.target_of_non_checked
-    @user = User.join_exp.find(params[:id])
+    @user = User.join_exp.includes(time_reports: [:experience_record, :tags])
+      .find(params[:id])
     main_tags = User.main_tags(params[:id])
     required_exp = RequiredExp.find_by(level: @user.level)
     if @user

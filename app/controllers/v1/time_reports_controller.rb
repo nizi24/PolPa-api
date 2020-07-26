@@ -29,7 +29,8 @@ class V1::TimeReportsController < ApplicationController
 
         render json: {
           time_report: time_report.to_json(include: [:experience_record, :tags,
-          comments: { methods: :likes_count }],
+          comments: { methods: :likes_count },
+          user: { methods: :avatar_url, except: [:uid, :email] }],
           methods: :likes_count ),
           experience: experience,
           required_exp: required_exp,
@@ -59,9 +60,7 @@ class V1::TimeReportsController < ApplicationController
           .add_progress(time_report)
 
           render json: {
-            time_report: time_report.to_json(include: [:experience_record, :tags,
-            comments: { include: { user: { except: [:uid, :email]}},
-            methods: :likes_count }],
+            time_report: time_report.to_json(include: [:experience_record, :tags, user: { methods: :avatar_url, except: [:uid, :email] }],
             methods: :likes_count ),
             experience: experience,
             required_exp: required_exp,
