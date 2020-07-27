@@ -1,5 +1,12 @@
 class V1::WeeklyTargetsController < ApplicationController
 
+  def index
+    user = User.find(params[:user_id])
+    weekly_targets = user.weekly_targets.order(created_at: :desc)
+    render json: weekly_targets.to_json(include:
+      :weekly_target_experience_record)
+  end
+
   def create
     user = User.find(params[:user_id])
     weekly_target = user.weekly_targets.build(
