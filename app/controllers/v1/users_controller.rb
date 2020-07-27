@@ -37,6 +37,7 @@ class V1::UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
+    user.random_screen_name
     if user.save && user.create_experience! && user.create_setting!
       user = User.join_exp.find(user.id)
       render json: user, status: :created
@@ -65,9 +66,9 @@ class V1::UsersController < ApplicationController
 
   def experience_rank
     if params[:weekly]
-      term = Time.current.beginning_of_week.since(4.hours)
+      term = Time.current.beginning_of_week
     elsif params[:monthly]
-      term = Time.current.beginning_of_month.since(4.hours)
+      term = Time.current.beginning_of_month
     end
     users = User.experience_rank(term)
     render json: { users: users.to_json(methods: :avatar_url) }

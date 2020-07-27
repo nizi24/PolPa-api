@@ -23,7 +23,7 @@ class WeeklyTargetProcessor
   end
 
   def add_progress(time_report)
-    start_date = Time.current.beginning_of_week.since(4.hours)
+    start_date = Time.current.beginning_of_week
     weekly_target = @user.weekly_targets
       .find_by('weekly_targets.start_date = ?', start_date)
     if weekly_target && time_report.study_date >= start_date
@@ -36,7 +36,7 @@ class WeeklyTargetProcessor
 
   # タイムレポートの更新前に減算する
   def sub_progress(time_report)
-    start_date = Time.current.beginning_of_week.since(4.hours)
+    start_date = Time.current.beginning_of_week
     weekly_target = @user.weekly_targets
       .find_by('weekly_targets.start_date = ?', start_date)
     if weekly_target && time_report.study_date >= start_date
@@ -50,7 +50,7 @@ class WeeklyTargetProcessor
   # 固定で100exp 追加で目標時間の1/3のexp を加算する
   def experience_record(weekly_target)
     gain_exp = 100
-    gain_exp += weekly_target.target_time.day.to_i * 20 * 24
+    gain_exp += (weekly_target.target_time.day.to_i - 1) * 20 * 24
     gain_exp += weekly_target.target_time.hour.to_i * 20
     gain_exp += weekly_target.target_time.min.to_i / 3
     experience_record = weekly_target

@@ -57,13 +57,17 @@ class User < ApplicationRecord
     format: { with: VALID_SCREEN_NAME_REGEX }
   validates :profile, length: { maximum: 160 }
 
+  def random_screen_name
+    self.screen_name = SecureRandom.alphanumeric(12)
+  end
+
   def target_of_the_week
-    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    weekly_start = Time.current.beginning_of_week
     weekly_targets.where('weekly_targets.start_date = ?', weekly_start)
   end
 
   def target_of_non_checked
-    weekly_start = Time.current.beginning_of_week.since(4.hours)
+    weekly_start = Time.current.beginning_of_week
     prev_weekly_target = weekly_targets.find_by('weekly_targets.start_date < ?
       AND checked = false', weekly_start)
     prev_weekly_target.check if prev_weekly_target

@@ -1,6 +1,15 @@
 class V1::TimeReportsController < ApplicationController
 
   def index
+    if params[:offset]
+      time_reports = TimeReport.limit(30)
+        .offset(params[:offset]).order(study_date: :desc)
+    else
+      time_reports = TimeReport.limit(30).order(study_date: :desc)
+    end
+    render json: { time_reports: time_reports.to_json(include: [:experience_record, :tags,
+    { user: { methods: :avatar_url, except: [:email, :uid] } }],
+    methods: :likes_count) }
   end
 
   def show

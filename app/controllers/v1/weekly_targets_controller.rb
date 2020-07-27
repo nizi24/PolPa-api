@@ -4,8 +4,8 @@ class V1::WeeklyTargetsController < ApplicationController
     user = User.find(params[:user_id])
     weekly_target = user.weekly_targets.build(
       target_time: params[:target_time],
-      start_date: Time.current.beginning_of_week.since(4.hours),
-      end_date: Time.current.end_of_week.since(4.hours)
+      start_date: Time.current.beginning_of_week,
+      end_date: Time.current.end_of_week
     )
     WeeklyTargetProcessor.new(user).totalization(weekly_target)
     if weekly_target.save!
