@@ -7,7 +7,8 @@ class V1::NoticesController < ApplicationController
       render json: notices.to_json(include: { action_user: {
         methods: :avatar_url, except: [:uid, :email] } })
     else
-      render json: user.to_json(include: { notices: { include: :action_user } },
+      render json: user.to_json(include: { notices: { include: {
+        action_user: { methods: :avatar_url, except: [:uid, :email] } } } },
         only: :id
       )
     end
@@ -19,6 +20,7 @@ class V1::NoticesController < ApplicationController
       notice.checked = true
       notice.save!
     end
-    render json: user.notice
+    render json: user.notice.to_json(include: { action_user: {
+      methods: :avatar_url, except: [:uid, :email] } })
   end
 end

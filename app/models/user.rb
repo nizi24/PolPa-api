@@ -12,8 +12,8 @@ class User < ApplicationRecord
     assoc.has_one :setting
     assoc.has_many :action, class_name: 'Notice',
       foreign_key: 'action_user_id'
-    assoc.has_many :notices, class_name: 'Notice',
-      foreign_key: 'received_user_id'
+    assoc.has_many :notices, -> { order(created_at: :desc) },
+      class_name: 'Notice', foreign_key: 'received_user_id'
     assoc.has_many :active_relationships, class_name: 'Relationship',
       foreign_key: 'follower_id'
     assoc.has_many :passive_relationships, class_name: 'Relationship',
