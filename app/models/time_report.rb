@@ -17,4 +17,8 @@ class TimeReport < ApplicationRecord
   def links
     time_report_tag_links
   end
+
+  def comments_count
+    comments.count
+  end
 end

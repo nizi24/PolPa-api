@@ -17,22 +17,4 @@ describe ExperienceRecorder do
       TagRecorder.new(time_report).create_links(tags)
     }.to change(time_report.links, :count).by(2)
   end
-
-  it 'タグを減らせること' do
-    tags = { 'tags' => [{ 'text' => 'foo' }, { 'text' => 'test' }]}
-    TagRecorder.new(time_report).create_links(tags)
-    tags = { 'tags' => [{ 'text' => 'foo' }]}
-    expect {
-      TagRecorder.new(time_report).create_links(tags)
-    }.to change(time_report.tags, :count).by(-1)
-  end
-
-  it 'どのタイムレポートとも紐付いていないタグは削除されること' do
-    tags = { 'tags' => [{ 'text' => 'foo' }, { 'text' => 'test' }]}
-    TagRecorder.new(time_report).create_links(tags)
-    tags = { 'tags' => [{ 'text' => 'foo' }]}
-    expect {
-      TagRecorder.new(time_report).create_links(tags)
-    }.to change(Tag, :count).by(-1)
-  end
 end

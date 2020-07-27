@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "V1::Comments", type: :request do
-  let(:user) { create(:user) }
-  let(:time_report) { create(:time_report) }
+  let(:user) { create(:user, :setting) }
+  let(:time_report) { create(:time_report, :setting) }
 
   describe '#create' do
     it 'コメントを作成できること' do

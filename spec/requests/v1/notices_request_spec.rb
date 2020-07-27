@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "V1::Notices", type: :request do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :setting) }
 
   describe '#check' do
     it '全ての通知をチェック済みにすること' do

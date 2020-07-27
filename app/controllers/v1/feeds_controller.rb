@@ -16,7 +16,7 @@ class V1::FeedsController < ApplicationController
       render json: { time_reports: timeline.to_json(include:
         [:experience_record, :tags,
         { user: { methods: :avatar_url, except: [:email, :uid] } }],
-        methods: :likes_count)
+        methods: [:likes_count, :comments_count])
       }
     end
   end
@@ -35,7 +35,7 @@ class V1::FeedsController < ApplicationController
     else
       render json: { time_reports: tag_feed.to_json(include: [:experience_record, :tags,
       { user: { methods: :avatar_url, except: [:email, :uid] } }],
-      methods: :likes_count)
+      methods: [:likes_count, :comments_count])
       }
     end
   end

@@ -9,7 +9,7 @@ class V1::TimeReportsController < ApplicationController
     end
     render json: { time_reports: time_reports.to_json(include: [:experience_record, :tags,
     { user: { methods: :avatar_url, except: [:email, :uid] } }],
-    methods: :likes_count) }
+    methods: [:likes_count, :comments_count]) }
   end
 
   def show
@@ -18,7 +18,7 @@ class V1::TimeReportsController < ApplicationController
     render json: { time_report: time_report.to_json(include: [:experience_record, :tags,
     comments: { include: { user: { except: [:uid, :email]}},
     methods: :likes_count }],
-    methods: :likes_count ),
+    methods: [:likes_count, :comments_count]),
       user: user.to_json(except: [:uid, :email]) }
   end
 

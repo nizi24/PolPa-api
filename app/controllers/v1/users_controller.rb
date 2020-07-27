@@ -26,7 +26,7 @@ class V1::UsersController < ApplicationController
     if @user
       render json: { user: @user.to_json(include: { time_reports: { include:
         [:experience_record, :tags],
-        methods: :likes_count }},
+        methods: [:likes_count, :comments_count]}},
         except:  [:uid, :email],
         methods: [:target_of_the_week, :follower_count, :following_count, :avatar_url]),
         prev_weekly_target: prev_weekly_target.to_json(include: :weekly_target_experience_record),

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'V1::TimeReports', type: :request do
 
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, :setting) }
   let!(:experience) { create(:experience, user: user) }
 
   describe '#show' do

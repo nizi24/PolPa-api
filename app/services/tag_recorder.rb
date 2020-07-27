@@ -10,6 +10,7 @@ class TagRecorder
       result = []
       tags.each do |t|
         name = t['text']
+        HashLock.acquire('tags', 'name', name)
         tag = Tag.find_or_create_by(name: name)
         find_or_create(tag.id)
         result << tag

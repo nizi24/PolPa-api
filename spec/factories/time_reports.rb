@@ -5,6 +5,10 @@ FactoryBot.define do
     study_date { Time.current }
     association :user
 
+    trait :setting do
+      after(:create) { |t| create(:setting, user: t.user )}
+    end
+
     trait :tags do
       after(:create) do |time_report|
         create_list(:tag, 3, time_reports: [time_report])

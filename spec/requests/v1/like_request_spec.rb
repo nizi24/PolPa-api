@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "V1::Like", type: :request do
   let(:user) { create(:user) }
-  let(:time_report) { create(:time_report) }
-  let(:comment) { create(:comment) }
+  let(:time_report) { create(:time_report, :setting) }
+  let(:comment) { create(:comment, :setting) }
 
   describe '#create' do
     it 'time_reportにlikeできること' do
