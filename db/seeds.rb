@@ -7,6 +7,7 @@ common_table_name.each do |table_name|
   end
 end
 
+#次のレベルに必要な経験値算出
 sum = 0
 pre = 0
 300.times do |i|
