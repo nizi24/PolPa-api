@@ -38,7 +38,7 @@ class V1::TimeReportsController < ApplicationController
           time_report: time_report.to_json(include: [:experience_record, :tags,
           comments: { methods: :likes_count },
           user: { methods: :avatar_url, except: [:uid, :email] }],
-          methods: :likes_count ),
+          methods: [:likes_count, :comments_count] ),
           experience: experience,
           required_exp: required_exp,
           weekly_target: weekly_target
@@ -68,7 +68,7 @@ class V1::TimeReportsController < ApplicationController
 
           render json: {
             time_report: time_report.to_json(include: [:experience_record, :tags, user: { methods: :avatar_url, except: [:uid, :email] }],
-            methods: :likes_count ),
+            methods: [:likes_count, :comments_count] ),
             experience: experience,
             required_exp: required_exp,
             weekly_target: weekly_target
