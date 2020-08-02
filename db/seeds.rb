@@ -9,6 +9,10 @@ end
 
 #ゲストユーザー作成
 
+# User.create!(name: 'guest', screen_name: 'guest', email: 'guest@example.com',
+# 
+# )
+
 #次のレベルに必要な経験値算出
 sum = 0
 pre = 0
