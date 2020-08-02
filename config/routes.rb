@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resource :like, only: [:create] do
       delete :delete, on: :collection
     end
+    resources :contacts, only: [:create]
     get '/timeline', to: 'feeds#timeline'
     get '/tag_feed', to: 'feeds#tag_feed'
   end
