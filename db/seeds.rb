@@ -7,6 +7,8 @@ common_table_name.each do |table_name|
   end
 end
 
+#ゲストユーザー作成
+
 #次のレベルに必要な経験値算出
 sum = 0
 pre = 0
