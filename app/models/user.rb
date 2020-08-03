@@ -111,14 +111,14 @@ class User < ApplicationRecord
       User.includes(time_reports: :experience_record)
         .left_joins(time_reports: :experience_record)
         .select('SUM(experience_records.experience_point) AS exp, users.name, users.screen_name, users.id')
-        .where('time_reports.study_date >= ?', term)
+        .where('time_reports.study_date >= ? AND users.guest = false', term)
         .group('users.id')
         .limit(10)
         .order('exp DESC')
     else
       User.joins(:experience)
         .select('experiences.total_experience AS exp, users.name, users.screen_name, users.id')
-        .where(id: Experience.total_experience_rank)
+        .where(id: Experience.total_experience_rank, guest: false)
         .order('experiences.total_experience DESC')
     end
   end
