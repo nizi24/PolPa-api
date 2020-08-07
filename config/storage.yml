@@ -12,3 +12,4 @@ amazon:
   secret_access_key: <%= ENV['AWS_SECRET_KEY'] %>
   region:            <%= ENV['AWS_REGION'] %>
   bucket:            <%= ENV['AWS_BUCKET'] %>
+  endpoint:          https://s3-us-west-2.amazonaws.com/
