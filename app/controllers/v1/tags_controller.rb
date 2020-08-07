@@ -31,8 +31,14 @@ class V1::TagsController < ApplicationController
   end
 
   def search
-    time_reports_ids = User
-      .search_time_reports_in_tags(params[:user_id], params[:name])
-    render json: { ids: time_reports_ids }
+    if params[:user_id]
+      time_reports_ids = User
+        .search_time_reports_in_tags(params[:user_id], params[:name])
+      render json: { ids: time_reports_ids }
+    else
+      tags = Tag.search(params[:name])
+      render json: { tags: tags.to_json(methods:
+        [:follower_count, :time_report_count]) }
+    end
   end
 end

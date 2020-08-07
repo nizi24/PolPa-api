@@ -71,7 +71,17 @@ class V1::UsersController < ApplicationController
       term = Time.current.beginning_of_month
     end
     users = User.experience_rank(term)
-    render json: { users: users.to_json(methods: :avatar_url) }
+    render json: { users: users.to_json(methods: :avatar_url,
+      except: [:uid, :email]) }
+  end
+
+  def search
+    users = User.search(params[:word])
+    if params[:word].gsub!(/\A@/, '')
+      users += User.screen_name_search(params[:word])
+    end
+    render json: { users: users.to_json(methods: :avatar_url,
+      except: [:uid, :email], include: :experience) }
   end
 
   private def user_params

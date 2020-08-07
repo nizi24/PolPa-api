@@ -17,14 +17,17 @@ Rails.application.routes.draw do
       end
       collection do
         get '/experience_rank', to: 'users#experience_rank'
+        get '/search', to: 'users#search'
       end
     end
     resources :tags, only: [:show] do
       post :follow, on: :member
       delete :unfollow, on: :member
+      get :search, on: :collection
     end
     resources :time_reports, except: [:new, :edit] do
       resources :comments, only: [:index]
+      get :tag_search, on: :collection
     end
     resources :comments, only: [:create, :destroy]
     resource :like, only: [:create] do

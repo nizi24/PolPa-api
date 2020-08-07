@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_relationships, source: :follower
   has_many :tags, through: :user_tag_relationships
 
+  scope :newest, -> { order(created_at: :desc) }
   scope :join_exp, -> { joins(:experience).select('users.*,
     experiences.experience_to_next, experiences.total_experience,
     experiences.level') }
@@ -143,5 +144,13 @@ class User < ApplicationRecord
     following_tag_ids = "SELECT tag_id FROM user_tag_relationships
                         WHERE user_id = :user_id"
     Tag.where("id IN (#{following_tag_ids})", user_id: id).order(:name)
+  end
+
+  def self.search(word)
+    User.where(['name LIKE ?', "%#{word}%"]).newest
+  end
+
+  def self.screen_name_search(word)
+    User.where(['screen_name LIKE ?', "%#{word}%"]).newest
   end
 end

@@ -96,6 +96,13 @@ class V1::TimeReportsController < ApplicationController
     end
   end
 
+  def tag_search
+    time_reports = TimeReport.tag_search(params[:tag_name])
+    render json: { time_reports: time_reports.to_json(include: [:experience_record, :tags,
+    user: { methods: :avatar_url, except: [:uid, :email] }],
+    methods: [:likes_count, :comments_count] ) }
+  end
+
   private def time_report_params
     params.require(:time_report).permit(:memo, :study_time, :study_date)
   end

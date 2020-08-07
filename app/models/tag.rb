@@ -17,4 +17,8 @@ class Tag < ApplicationRecord
   def time_report_count
     time_report_tag_links.count
   end
+
+  def self.search(word)
+    Tag.where(['name LIKE ?', "%#{word}%"])
+  end
 end
