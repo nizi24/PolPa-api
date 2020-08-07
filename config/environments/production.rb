@@ -86,7 +86,7 @@ Rails.application.configure do
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'polpa-v1-api.herokuapp.com'
+  host = 'polpa-api.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   user_name = ENV['SENDGRID_USERNAME']
   pass = ENV['SENDGRID_PASSWORD']
