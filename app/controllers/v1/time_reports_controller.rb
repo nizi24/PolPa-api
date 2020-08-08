@@ -1,16 +1,23 @@
 class V1::TimeReportsController < ApplicationController
 
   def index
+    if params[:offset]
+      time_reports = TimeReport.limit(30)
+        .offset(params[:offset]).order(study_date: :desc)
+    else
+      time_reports = TimeReport.limit(30).order(study_date: :desc)
+    end
+    render json: { time_reports: time_reports.to_json(include: [:experience_record, :tags,
+    { user: { methods: :avatar_url, except: [:email, :uid] } }],
+    methods: [:likes_count, :comments_count]) }
   end
 
   def show
     time_report = TimeReport.find(params[:id])
     user = time_report.user
-    render json: { time_report: time_report.to_json(include: [:experience_record, :tags,
-    comments: { include: { user: { except: [:uid, :email]}},
-    methods: :likes_count }],
-    methods: :likes_count ),
-      user: user.to_json(except: [:uid, :email]) }
+    render json: { time_report: time_report.to_json(include: [:experience_record, :tags],
+    methods: [:likes_count, :comments_count]),
+      user: user.to_json(except: [:uid, :email], methods: :avatar_url) }
   end
 
   def create
@@ -29,8 +36,9 @@ class V1::TimeReportsController < ApplicationController
 
         render json: {
           time_report: time_report.to_json(include: [:experience_record, :tags,
-          comments: { methods: :likes_count }],
-          methods: :likes_count ),
+          comments: { methods: :likes_count },
+          user: { methods: :avatar_url, except: [:uid, :email] }],
+          methods: [:likes_count, :comments_count] ),
           experience: experience,
           required_exp: required_exp,
           weekly_target: weekly_target
@@ -59,10 +67,8 @@ class V1::TimeReportsController < ApplicationController
           .add_progress(time_report)
 
           render json: {
-            time_report: time_report.to_json(include: [:experience_record, :tags,
-            comments: { include: { user: { except: [:uid, :email]}},
-            methods: :likes_count }],
-            methods: :likes_count ),
+            time_report: time_report.to_json(include: [:experience_record, :tags, user: { methods: :avatar_url, except: [:uid, :email] }],
+            methods: [:likes_count, :comments_count] ),
             experience: experience,
             required_exp: required_exp,
             weekly_target: weekly_target
@@ -73,7 +79,7 @@ class V1::TimeReportsController < ApplicationController
 
   def destroy
     user = User.find(params[:user_id])
-    time_report = TimeReport.includes(:likes, { comments: :likes })
+    time_report = TimeReport.includes(:likes, { comments: [:likes, :notices] })
       .find(params[:id])
     weekly_target = WeeklyTargetProcessor.new(user).sub_progress(time_report)
 
@@ -88,6 +94,13 @@ class V1::TimeReportsController < ApplicationController
         weekly_target: weekly_target
       }
     end
+  end
+
+  def tag_search
+    time_reports = TimeReport.tag_search(params[:tag_name])
+    render json: { time_reports: time_reports.to_json(include: [:experience_record, :tags,
+    user: { methods: :avatar_url, except: [:uid, :email] }],
+    methods: [:likes_count, :comments_count] ) }
   end
 
   private def time_report_params

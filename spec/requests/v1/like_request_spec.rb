@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "V1::Like", type: :request do
   let(:user) { create(:user) }
-  let(:time_report) { create(:time_report) }
-  let(:comment) { create(:comment) }
+  let(:other_user) { create(:user, :setting) }
+  let(:time_report) { create(:time_report, :setting) }
+  let(:comment) { create(:comment, :setting) }
 
   describe '#create' do
     it 'time_reportにlikeできること' do
@@ -28,6 +29,17 @@ RSpec.describe "V1::Like", type: :request do
       }.to change(comment.likes, :count).by(1)
     end
 
+    it 'time_reportにlikeした時に通知が送信されること' do
+      like_params = {
+        likeable_id: time_report.id,
+        likeable_type: 'TimeReport',
+        user_id: user.id
+      }
+      expect {
+        post v1_like_path, params: { like: like_params }
+      }.to change(time_report.user.notices, :count).by(1)
+    end
+
     it 'commentにlikeした時に通知が送信されること' do
       like_params = {
         likeable_id: comment.id,
@@ -37,6 +49,19 @@ RSpec.describe "V1::Like", type: :request do
       expect {
         post v1_like_path, params: { like: like_params }
       }.to change(comment.user.notices, :count).by(1)
+    end
+
+    it '投稿のユーザーの設定がfalseの時は通知は作られないこと' do
+      time_report = create(:time_report, user: other_user)
+      like_params = {
+        likeable_id: time_report.id,
+        likeable_type: 'TimeReport',
+        user_id: user.id
+      }
+      other_user.setting.update(time_report_like_notice: false)
+      expect{
+        post v1_like_path, params: { like: like_params }
+      }.to_not change(other_user.notices, :count)
     end
   end
 

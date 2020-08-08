@@ -7,4 +7,9 @@ class Experience < ApplicationRecord
   validates :level, presence: true, numericality: { only_integer: true }
   validates :total, presence: true, numericality: { only_integer: true }
   validates :to_next, presence: true, numericality: { only_integer: true }
+
+  def self.total_experience_rank
+    experiences = Experience.order(total_experience: :desc).limit(10)
+    experiences.map(&:user_id)
+  end
 end

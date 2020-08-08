@@ -17,4 +17,16 @@ class TimeReport < ApplicationRecord
   def links
     time_report_tag_links
   end
+
+  def comments_count
+    comments.count
+  end
+
+  def self.tag_search(word)
+    tag_ids = "SELECT id FROM tags
+              WHERE name LIKE '%#{word}%'"
+    time_report_ids = "SELECT time_report_id FROM time_report_tag_links
+                      WHERE tag_id IN (#{tag_ids})"
+    TimeReport.where("id IN (#{time_report_ids})").newest
+  end
 end

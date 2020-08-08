@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "V1::Users", type: :request do
 
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, :setting) }
   let!(:experience) { create(:experience, user: user) }
 
   describe '#show' do
@@ -39,6 +39,15 @@ RSpec.describe "V1::Users", type: :request do
         post v1_users_path, params: { user: user_params }
       }.to change(User, :count).by(1)
       expect(response.status).to eq 201
+    end
+  end
+
+  describe '#update' do
+    it 'ユーザー情報を更新できること' do
+      user_params = attributes_for(:user, email: 'foo@example.com')
+      patch v1_user_path(user.id), params: { user: user_params }
+      user.reload
+      expect(user.email).to eq 'foo@example.com'
     end
   end
 end
