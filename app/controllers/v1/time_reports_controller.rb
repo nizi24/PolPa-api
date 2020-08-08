@@ -79,7 +79,7 @@ class V1::TimeReportsController < ApplicationController
 
   def destroy
     user = User.find(params[:user_id])
-    time_report = TimeReport.includes(:likes, { comments: :likes })
+    time_report = TimeReport.includes(:likes, { comments: [:likes, :notices] })
       .find(params[:id])
     weekly_target = WeeklyTargetProcessor.new(user).sub_progress(time_report)
 

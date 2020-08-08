@@ -41,4 +41,13 @@ RSpec.describe "V1::Users", type: :request do
       expect(response.status).to eq 201
     end
   end
+
+  describe '#update' do
+    it 'ユーザー情報を更新できること' do
+      user_params = attributes_for(:user, email: 'foo@example.com')
+      patch v1_user_path(user.id), params: { user: user_params }
+      user.reload
+      expect(user.email).to eq 'foo@example.com'
+    end
+  end
 end

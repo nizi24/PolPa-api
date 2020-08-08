@@ -10,6 +10,6 @@ class Experience < ApplicationRecord
 
   def self.total_experience_rank
     experiences = Experience.order(total_experience: :desc).limit(10)
-    experiences.map(&:id)
+    experiences.map(&:user_id)
   end
 end

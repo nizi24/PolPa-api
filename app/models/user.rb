@@ -42,7 +42,7 @@ class User < ApplicationRecord
     .order('count DESC')
   }
   scope :search_time_reports_in_tags, -> (user_id, tag) {
-    includes_tags.left_joins_tags
+    left_joins_tags
     .select('time_reports.id')
     .where('users.id = ? AND tags.name LIKE ?', user_id, "%#{tag}%")
     .order('time_reports.study_date')
