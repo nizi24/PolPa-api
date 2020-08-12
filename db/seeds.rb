@@ -19,7 +19,7 @@ user.create_setting!
 #次のレベルに必要な経験値算出
 sum = 0
 pre = 0
-300.times do |i|
+1000.times do |i|
   i += 1
   if i == 1
     exp = 50
