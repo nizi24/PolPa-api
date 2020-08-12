@@ -1,0 +1,2 @@
+class RequiredExp < ApplicationRecord
+end
