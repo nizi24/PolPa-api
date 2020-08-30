@@ -23,9 +23,10 @@ class TimeReport < ApplicationRecord
   end
 
   def self.tag_search(word)
-    tag_ids_sql = "SELECT id FROM tags
-              WHERE name LIKE :word"
-    tag_ids = Tag.find_by_sql(tag_ids_sql, word: word)
+    tag_ids_query = "SELECT id FROM tags
+                    WHERE name LIKE ?"
+    tag_ids = Tag.find_by_sql([tag_ids_query, "%#{sanitize_sql_like(word)}%"])
+      .map(&:id).join(',')
     time_report_ids = "SELECT time_report_id FROM time_report_tag_links
                       WHERE tag_id IN (#{tag_ids})"
     TimeReport.where("id IN (#{time_report_ids})").newest
