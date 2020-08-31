@@ -53,14 +53,14 @@ class V1::UsersController < ApplicationController
 
   def update
     user = User.find(params[:id])
-    if user.update(user_params)
+    if !user.guest && user.update(user_params)
       render json: { user: user }
     end
   end
 
   def update_avatar
     user = User.find(params[:id])
-    user.avatar.attach(params[:avatar])
+    user.avatar.attach(params[:avatar]) if !user.guest
     render json: { user: user.to_json(methods: :avatar_url) }
   end
 
