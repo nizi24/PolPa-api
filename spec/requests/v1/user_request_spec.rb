@@ -49,5 +49,13 @@ RSpec.describe "V1::Users", type: :request do
       user.reload
       expect(user.email).to eq 'foo@example.com'
     end
+
+    it 'ゲストアカウントは更新できないこと' do
+      guest = create(:user, guest: true, email: 'guest2@example.com')
+      user_params = attributes_for(:user, email: 'foo@example.com')
+      patch v1_user_path(guest.id), params: { user: user_params }
+      guest.reload
+      expect(guest.email).to eq 'guest2@example.com'
+    end
   end
 end
