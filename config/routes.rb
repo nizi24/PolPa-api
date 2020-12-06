@@ -37,4 +37,24 @@ Rails.application.routes.draw do
     get '/timeline', to: 'feeds#timeline'
     get '/tag_feed', to: 'feeds#tag_feed'
   end
+
+  namespace :v2 do
+    resources :users, only: [:index, :show, :create, :update, :edit] do
+      member do
+        get '/avatar_url', to: 'users#avatar_url'
+        get '/following_count', to: 'users#following_count'
+        get '/follower_count', to: 'users#follower_count'
+      end
+      resources :time_reports, only: :index
+      resource :experience, only: :show
+      resources :weekly_targets, only: [:index, :create]
+      resource :weekly_target, only: :show
+      resources :likes, only: :index
+    end
+    resource :required_exp, only: :show
+    resources :time_reports, only: [:index, :show, :create, :update, :destroy]
+    resource :likes, only: [] do
+      post '/delete', to: 'likes#delete'
+    end
+  end
 end

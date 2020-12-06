@@ -1,3 +1,5 @@
+# RequiredExp.destroy_all
+
 #次のレベルに必要な経験値算出
 sum = 0
 pre = 0
@@ -7,7 +9,7 @@ pre = 0
     exp = 50
   elsif i <= 15
     exp = 50 + i * 2
-  elsif i <= 180
+  elsif i <= 300
     exp = (pre * 1.1 + i * 5) / 2
   else
     exp = 1000

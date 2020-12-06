@@ -19,6 +19,9 @@ class WeeklyTargetProcessor
     total_minutes = total_study_time % 60
     time_format = "2000-01-0#{total_days + 1} #{total_hours}:#{total_minutes}"
     weekly_target.progress = time_format
+    if total_days >= 9
+      weekly_target.progress = "2000-01-01 00:00"
+    end
     weekly_target.save!
   end
 
