@@ -130,4 +130,17 @@ describe ExperienceRecorder do
       end
     end
   end
+
+  describe '#check_level' do
+    context 'レベルが300の時' do
+      it 'レベルが上がらないこと' do
+        user.experience.level = 299
+        user.experience.total = 249300
+        user.experience.to_next = 300
+        ExperienceRecorder.new(user).check_level
+        expect(user.experience.level).to eq 300
+        expect(user.experience.to_next).to eq 0
+      end
+    end
+  end
 end

@@ -6,8 +6,14 @@ class Tag < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 50 }
 
+  attr_accessor :current_user
+
   def links
     time_report_tag_links
+  end
+
+  def following?
+    users.include?(current_user)
   end
 
   def follower_count

@@ -14,6 +14,7 @@ class Comment < ApplicationRecord
         received_user_id: time_report.user.id,
         time_report_id: time_report.id
       )
+      FcmRegister.new(time_report.user).create_message("あなたの学習記録にコメントがつきました。", "@#{user.screen_name}さんがあなたの学習記録にコメントがつきました。")
       notice.save!
     end
   end

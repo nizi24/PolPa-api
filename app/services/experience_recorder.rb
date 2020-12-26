@@ -36,11 +36,18 @@ class ExperienceRecorder
 
   def check_level
     required = RequiredExp.find_by(level: experience.level)
-    if required
-      sub_total = required.total_experience - experience.total
+    sub_total = required.total_experience - experience.total
+    if experience.level < 299
       if sub_total <= 0
         experience.level += 1
         check_level
+      else
+        experience.to_next = sub_total
+      end
+    elsif experience.level == 299
+      if sub_total <= 0
+        experience.level += 1
+        experience.to_next = 0
       else
         experience.to_next = sub_total
       end
