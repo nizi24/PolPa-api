@@ -17,8 +17,25 @@ class V2::TimeReportsController < ApplicationController
         { user: { methods: :avatar_url, except: [:email, :uid] } }],
         methods: [:likes_count, :comments_count])
       end
+    elsif params[:tag_id]
+      tag = Tag.includes(:user_tag_relationships, :time_reports).find(params[:tag_id])
+      time_reports = tag.time_reports.newest
+      if params[:limit]
+        render json: time_reports.limit(params[:limit]).to_json(include: [:experience_record, :tags,
+          { user: { methods: :avatar_url, except: [:email, :uid] } }],
+          methods: [:likes_count, :comments_count])
+      elsif params[:offset]
+        render json: time_reports.limit(30)
+          .offset(params[:offset]).to_json(include: [:experience_record, :tags,
+          { user: { methods: :avatar_url, except: [:email, :uid] } }],
+          methods: [:likes_count, :comments_count])
+      else
+        render json: time_reports.limit(30).to_json(include: [:experience_record, :tags,
+        { user: { methods: :avatar_url, except: [:email, :uid] } }],
+        methods: [:likes_count, :comments_count])
+      end
     else
-      time_reports = TimeReport.all
+      time_reports = TimeReport.all.order(study_date: :desc)
       if params[:limit]
         render json: time_reports.limit(params[:limit]).to_json(include: [:experience_record, :tags,
           { user: { methods: :avatar_url, except: [:email, :uid] } }],
@@ -94,6 +111,26 @@ class V2::TimeReportsController < ApplicationController
       { user: { methods: :avatar_url, except: [:email, :uid] } }],
       methods: [:likes_count, :comments_count])
     end
+  end
+
+  def tag_search
+    if params[:user_id]
+      time_report_ids = User.search_time_reports_in_tags(params[:user_id], params[:tag_name])
+      if params[:offset]
+        time_reports = TimeReport.where(id: time_report_ids).offset(params[:offset]).limit(30)
+      else
+        time_reports = TimeReport.where(id: time_report_ids).limit(30)
+      end
+    else
+      if params[:offset]
+        time_reports = TimeReport.tag_search(params[:tag_name]).offset(params[:offset]).limit(30)
+      else
+        time_reports = TimeReport.tag_search(params[:tag_name]).limit(30)
+      end
+    end
+    render json: time_reports.to_json(include: [:experience_record, :tags,
+    user: { methods: :avatar_url, except: [:uid, :email] }],
+    methods: [:likes_count, :comments_count])
   end
 
   private def time_report_params

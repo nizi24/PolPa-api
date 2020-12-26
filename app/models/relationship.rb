@@ -13,6 +13,7 @@ class Relationship < ApplicationRecord
         action_user_id: follower_id,
         received_user_id: followed_id
       )
+      FcmRegister.new(User.find(followed_id)).create_message("フォローされました。", "@#{User.find(follower_id).screen_name}さんがあなたをフォローしました。")
       notice.save!
     end
   end

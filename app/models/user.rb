@@ -19,6 +19,7 @@ class User < ApplicationRecord
     assoc.has_many :passive_relationships, class_name: 'Relationship',
       foreign_key: 'followed_id'
     assoc.has_many :user_tag_relationships
+    assoc.has_many :devices
   end
 
   has_one_attached :avatar
@@ -95,6 +96,10 @@ class User < ApplicationRecord
     self.following.delete(other_user)
   end
 
+  def following?(other_user)
+    self.following.include?(other_user)
+  end
+
   def following_count
     self.active_relationships.length
   end
@@ -124,20 +129,20 @@ class User < ApplicationRecord
     end
   end
 
-  def timeline(offset = 0)
+  def timeline(offset = 0, limit = 30)
     following_ids = "SELECT followed_id FROM relationships
                      WHERE follower_id = :user_id"
-    TimeReport.where("user_id IN (#{following_ids})", user_id: id).limit(30).offset(offset).newest
+    TimeReport.where("user_id IN (#{following_ids})", user_id: id).limit(limit).offset(offset).newest
   end
 
-  def tag_feed(offset = 0)
+  def tag_feed(offset = 0, limit = 30)
     user_id = self.id
     following_tag_ids = "SELECT tag_id FROM user_tag_relationships
                         WHERE user_id = #{user_id}"
     time_report_ids = "SELECT time_report_id FROM time_report_tag_links
                       WHERE tag_id IN (#{following_tag_ids})"
     TimeReport.where("id IN (#{time_report_ids})")
-      .limit(30).offset(offset).newest
+      .limit(limit).offset(offset).newest
   end
 
   def following_tags

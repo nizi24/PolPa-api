@@ -3,6 +3,7 @@ class WeeklyTarget < ApplicationRecord
   has_one :weekly_target_experience_record, dependent: :destroy
 
   validates :user_id, uniqueness: { scope: [:start_date, :end_date] }
+  validates :target_time, presence: true
 
   def experience_record
     weekly_target_experience_record

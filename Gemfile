@@ -12,6 +12,7 @@ gem 'date_validator'
 gem 'bullet'
 gem 'whenever', require: false
 gem 'aws-sdk-s3', require: false
+gem 'fcm'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 
