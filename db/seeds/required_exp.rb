@@ -1,4 +1,4 @@
-RequiredExp.destroy_all
+# RequiredExp.destroy_all
 
 #次のレベルに必要な経験値算出
 sum = 0
