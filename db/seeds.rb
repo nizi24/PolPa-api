@@ -1,23 +1,22 @@
-# common_table_name = %w(required_exp, hash_locks)
-# common_table_name.each do |table_name|
-#   path = Rails.root.join('db', 'seeds', "#{table_name}.rb")
-#   if File.exist?(path)
-#     puts "Creating #{table_name}....."
-#     require(path)
-#   end
-# end
-#
-# #ゲストユーザー作成
-#
-# user = User.create!(name: 'guest', screen_name: 'guest', email: 'guest@example.com',
-#   profile: 'ゲストアカウントです。', uid: 'pGPGiSYpVEP0TTEvzPjwcEfeVAu2',
-#   guest: true
-# )
-# user.create_experience!
-# user.create_setting!
+common_table_name = %w(required_exp, hash_locks)
+common_table_name.each do |table_name|
+  path = Rails.root.join('db', 'seeds', "#{table_name}.rb")
+  if File.exist?(path)
+    puts "Creating #{table_name}....."
+    require(path)
+  end
+end
+
+#ゲストユーザー作成
+
+user = User.create!(name: 'guest', screen_name: 'guest', email: 'guest@example.com',
+  profile: 'ゲストアカウントです。', uid: 'pGPGiSYpVEP0TTEvzPjwcEfeVAu2',
+  guest: true
+)
+user.create_experience!
+user.create_setting!
 
 #次のレベルに必要な経験値算出
-RequiredExp.destroy_all
 
 sum = 0
 pre = 0
