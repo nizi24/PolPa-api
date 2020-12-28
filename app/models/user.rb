@@ -18,6 +18,10 @@ class User < ApplicationRecord
       foreign_key: 'follower_id'
     assoc.has_many :passive_relationships, class_name: 'Relationship',
       foreign_key: 'followed_id'
+    assoc.has_many :blocking_relationships, class_name: 'Block',
+      foreign_key: 'blocker_id'
+    assoc.has_many :blocked_relationships, class_name: 'Block',
+      foreign_key: 'blocked_id'
     assoc.has_many :user_tag_relationships
     assoc.has_many :devices
   end
@@ -25,6 +29,8 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
+  has_many :blocking, through: :blocking_relationships, source: :blocked
+  has_many :blockers, through: :blocked_relationships, source: :blocker
   has_many :tags, through: :user_tag_relationships
 
   scope :newest, -> { order(created_at: :desc) }
@@ -106,6 +112,14 @@ class User < ApplicationRecord
 
   def follower_count
     self.passive_relationships.length
+  end
+
+  def block(other_user)
+    self.blocking << other_user
+  end
+
+  def unblock(other_user)
+    self.blocking.delete(other_user)
   end
 
   def avatar_url

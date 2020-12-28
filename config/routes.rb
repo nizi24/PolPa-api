@@ -73,6 +73,7 @@ Rails.application.routes.draw do
       resources :notices, only: :index do
         get :check, on: :collection
       end
+      resources :blocks, only: [:index, :create, :destroy]
     end
     resources :tags, only: [:show] do
       resources :time_reports, only: :index
