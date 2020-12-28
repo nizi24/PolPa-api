@@ -17,6 +17,7 @@ user.create_experience!
 user.create_setting!
 
 #次のレベルに必要な経験値算出
+
 sum = 0
 pre = 0
 300.times do |i|
