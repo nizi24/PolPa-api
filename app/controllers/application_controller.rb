@@ -14,7 +14,6 @@ class ApplicationController < ActionController::API
     end
 
     def extract_access_token
-      # byebug
       Firebase::Auth::IDTokenKeeper::IDToken.new(token_from_request_headers).verified_id_token
     end
 
