@@ -48,8 +48,7 @@ class V1::UsersController < ApplicationController
   end
 
   def edit
-    user = User.find(params[:id])
-    render json: { user: user }
+    render json: { user: current_user }
   end
 
   def update
