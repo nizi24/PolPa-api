@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include ErrorHandlers if Rails.env.production?
+  include ActionController::HttpAuthentication::Token::ControllerMethods
 
   private
     def authorize
@@ -9,12 +10,15 @@ class ApplicationController < ActionController::API
 
     def current_user
       return unless @current_user_firebase_uid
-      @current_user ||= User.find_by(uuid: @current_user_firebase_uid)
+      @current_user ||= User.find_by(uid: @current_user_firebase_uid)
     end
 
     def extract_access_token
-      authenticate_with_http_token do |token, _|
-        Firebase::Auth::IDTokenKeeper::IDToken.new(token).verified_id_token
-      end
+      # byebug
+      Firebase::Auth::IDTokenKeeper::IDToken.new(token_from_request_headers).verified_id_token
+    end
+
+    def token_from_request_headers
+      request.headers['Authorization']&.split&.last
     end
 end

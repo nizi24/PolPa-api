@@ -1,4 +1,5 @@
 class V1::UsersController < ApplicationController
+  before_action :authorize, only: [:edit, :update, :update_avatar]
 
   def index
     if params[:uid]
