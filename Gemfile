@@ -13,6 +13,7 @@ gem 'bullet'
 gem 'whenever', require: false
 gem 'aws-sdk-s3', require: false
 gem 'fcm'
+gem 'firebase-auth-id_token_keeper'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 
