@@ -1,4 +1,5 @@
 class V1::UsersController < ApplicationController
+  before_action :authorize, only: [:edit, :update, :update_avatar]
 
   def index
     if params[:uid]
@@ -47,19 +48,18 @@ class V1::UsersController < ApplicationController
   end
 
   def edit
-    user = User.find(params[:id])
-    render json: { user: user }
+    render json: { user: current_user }
   end
 
   def update
-    user = User.find(params[:id])
+    user = current_user
     if !user.guest && user.update(user_params)
       render json: { user: user }
     end
   end
 
   def update_avatar
-    user = User.find(params[:id])
+    user = current_user
     user.avatar.attach(params[:avatar]) if !user.guest
     render json: { user: user.to_json(methods: :avatar_url) }
   end
