@@ -19,9 +19,11 @@ class V1::CommentsController < ApplicationController
 
   def destroy
     comment = Comment.includes(:notices).find(params[:id])
-    comment.destroy!
-    render json: comment.to_json(include: { user: { except: [:uid, :email], methods: :avatar_url }},
-      methods: :likes_count)
+    if current_user == comment.user
+      comment.destroy!
+      render json: comment.to_json(include: { user: { except: [:uid, :email], methods: :avatar_url }},
+        methods: :likes_count)
+    end
   end
 
   private def comment_params

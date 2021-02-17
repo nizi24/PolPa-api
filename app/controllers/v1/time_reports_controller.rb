@@ -1,4 +1,5 @@
 class V1::TimeReportsController < ApplicationController
+  before_action :authorize, only: [:create, :update, :destroy]
 
   def index
     if params[:offset]
@@ -21,7 +22,7 @@ class V1::TimeReportsController < ApplicationController
   end
 
   def create
-    user = User.find(params[:user_id])
+    user = current_user
     time_report = user.time_reports.build(time_report_params)
 
     ActiveRecord::Base.transaction do
@@ -51,7 +52,7 @@ class V1::TimeReportsController < ApplicationController
   end
 
   def update
-    user = User.find(params[:user_id])
+    user = current_user
     time_report = TimeReport.find(params[:id])
     WeeklyTargetProcessor.new(user).sub_progress(time_report)
     time_report.assign_attributes(time_report_params)
@@ -78,7 +79,7 @@ class V1::TimeReportsController < ApplicationController
   end
 
   def destroy
-    user = User.find(params[:user_id])
+    user = current_user
     time_report = TimeReport.includes(:likes, { comments: [:likes, :notices] })
       .find(params[:id])
     weekly_target = WeeklyTargetProcessor.new(user).sub_progress(time_report)
