@@ -1,4 +1,5 @@
 class V2::WeeklyTargetsController < ApplicationController
+  before_action :authorize, only: [:create]
 
   def index
     user = User.find(params[:user_id])
@@ -13,7 +14,7 @@ class V2::WeeklyTargetsController < ApplicationController
   end
 
   def create
-    user = User.find(params[:user_id])
+    user = current_user
     weekly_target = user.weekly_targets.build(
       target_time: params[:target_time],
       start_date: Time.current.beginning_of_week,

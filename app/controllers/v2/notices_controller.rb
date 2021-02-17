@@ -1,4 +1,5 @@
 class V2::NoticesController < ApplicationController
+  before_action :authorize, only: [:check]
 
   def index
     user = User.find(params[:user_id])
@@ -15,7 +16,7 @@ class V2::NoticesController < ApplicationController
   end
 
   def check
-    user = User.find(params[:user_id])
+    user = current_user
     notices = user.notice
     notices.where(checked: false).each do |notice|
       notice.checked = true
