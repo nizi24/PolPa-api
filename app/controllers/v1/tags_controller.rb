@@ -1,4 +1,5 @@
 class V1::TagsController < ApplicationController
+  before_action :authorize, only: [:follow, :unfollow]
 
   def show
     tag = Tag.includes(:user_tag_relationships, :time_reports).find(params[:id])
@@ -13,12 +14,12 @@ class V1::TagsController < ApplicationController
 
   def follow
     tag = Tag.find(params[:id])
-    tag.user_tag_relationships.create(user_id: params[:user_id])
+    tag.user_tag_relationships.create(user_id: current_user.id)
     render json: tag.id
   end
 
   def unfollow
-    tag_relation = UserTagRelationship.find_by(user_id: params[:user_id], tag_id: params[:id])
+    tag_relation = UserTagRelationship.find_by(user_id: current_user.id, tag_id: params[:id])
     tag_id = tag_relation.tag_id
     tag_relation.destroy!
     render json: tag_id

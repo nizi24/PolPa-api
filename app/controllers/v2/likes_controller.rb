@@ -1,4 +1,5 @@
 class V2::LikesController < ApplicationController
+  before_action :authorize, only: [:delete]
 
   def index
     user = User.find(params[:user_id])
@@ -7,7 +8,7 @@ class V2::LikesController < ApplicationController
 
   def delete
     like = Like.find_by(like_params)
-    if like.destroy!
+    if current_user == like.user && like.destroy!
       render json: like.to_json(only: [:likeable_type, :likeable_id, :user_id])
     end
   end

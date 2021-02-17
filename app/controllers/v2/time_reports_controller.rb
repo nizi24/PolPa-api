@@ -1,4 +1,5 @@
 class V2::TimeReportsController < ApplicationController
+  before_action :authorize, only: [:create, :update, :destroy]
 
   def index
     if params[:user_id]

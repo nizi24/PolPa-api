@@ -1,7 +1,8 @@
 class V1::LikesController < ApplicationController
+  before_action :authorize, only: [:create, :destroy]
 
   def create
-    like = Like.new(like_params)
+    like = current_user.likes.create(like_params)
     if like.save
       like.notice
       render json: like.to_json(only: [:likeable_type, :likeable_id, :user_id])
@@ -11,7 +12,7 @@ class V1::LikesController < ApplicationController
   def delete
     liked = JSON.parse(params['like'])
     like = Like.find_by(liked)
-    if like.destroy!
+    if like.user == current_user && like.destroy!
       render json: like.to_json(only: [:likeable_type, :likeable_id, :user_id])
     end
   end
