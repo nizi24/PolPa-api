@@ -52,7 +52,7 @@ class V1::UsersController < ApplicationController
   end
 
   def destroy
-    user = current_user
+    user = User.find(uid: params[:uid])
     if !user.guest
       user.destroy
     end
