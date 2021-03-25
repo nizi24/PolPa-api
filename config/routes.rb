@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   namespace :v1 do
-    resources :users, only: [:index, :show, :create, :update, :edit] do
+    resources :users, only: [:index, :show, :create, :update, :edit, :destroy] do
       resource :setting, only: [:edit, :update]
       resources :weekly_targets, only: [:index, :create]
       resources :tags, only: [] do

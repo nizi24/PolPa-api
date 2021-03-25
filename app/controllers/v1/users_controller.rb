@@ -1,5 +1,5 @@
 class V1::UsersController < ApplicationController
-  before_action :authorize, only: [:edit, :update, :update_avatar]
+  before_action :authorize, only: [:edit, :update, :update_avatar, :destroy]
 
   def index
     if params[:uid]
@@ -49,6 +49,13 @@ class V1::UsersController < ApplicationController
 
   def edit
     render json: { user: current_user }
+  end
+
+  def destroy
+    user = current_user
+    if !user.guest
+      user.destroy
+    end
   end
 
   def update
